@@ -49,11 +49,11 @@ cd mobile-training
 git status
 
 # Add files to the staging area
-git add filename.java           # Add a specific file
+git add filename.dart           # Add a specific file
 git add .                       # Add all changed files
 
 # Commit your changes with a descriptive message
-git commit -m "Brief description of the changes"
+git commit -m "action(scope): description of the changes"
 
 # Create and switch to a new branch
 git checkout -b login/your-name
