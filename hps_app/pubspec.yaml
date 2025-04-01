@@ -17,3 +17,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/icons/
+    - assets/image/
+    - assets/fonts/
+
+  fonts:
+    - family: EB Garamond
+      fonts:
+        - asset: assets/fonts/EBGaramond-Italic-VariableFont_wght.ttf
+        - asset: assets/fonts/EBGaramond-VariableFont_wght.ttf
