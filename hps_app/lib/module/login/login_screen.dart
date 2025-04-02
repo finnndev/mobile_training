@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hps_app/module/home/home_screen.dart';
+import 'package:hps_app/module/register/register.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/image/img_logo.png',
+                'assets/images/img_logo.png',
                 width: 120,
                 height: 120,
                 fit: BoxFit.cover,
@@ -108,11 +110,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(color: ColorsConstants.customBackground),
                   ),
                   SizedBox(width: 5),
-                  Text(
-                    'Đăng kí',
-                    style: TextStyle(
-                      color: ColorsConstants.yellowPrimary,
-                      fontWeight: FontWeight.bold,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegisterScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Đăng ký',
+                      style: TextStyle(
+                        color: ColorsConstants.yellowPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -159,7 +171,12 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
 
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

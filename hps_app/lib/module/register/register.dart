@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hps_app/module/login/login_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class RegisterScreen extends StatelessWidget {
           child: Column(
             children: [
               Image.asset(
-                'assets/image/img_logo.png',
+                'assets/images/img_logo.png',
                 width: 100,
                 height: 100,
                 fit: BoxFit.cover,
@@ -134,20 +135,44 @@ class RegisterScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
               //Liên kết với Đăng nhập
-              RichText(
-                text: TextSpan(
-                  text: 'Bạn đã có tài khoản?',
-                  style: TextStyle(color: Color(0xff99A8A3)),
-                  children: [
-                
-                    TextSpan(
-                      text: 'Đăng nhập',
-                      style: TextStyle(color: Color(0xffF3AC40),
-                      fontWeight: FontWeight.bold),
-                      
+              // RichText(
+              //   text: TextSpan(
+              //     text: 'Bạn đã có tài khoản?',
+              //     style: TextStyle(color: Color(0xff99A8A3)),
+              //     children: [
+              //       TextSpan(
+              //         text: 'Đăng nhập',
+              //         style: TextStyle(
+              //           color: Color(0xffF3AC40),
+              //           fontWeight: FontWeight.bold,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Bạn đã có tài khoản chưa? ',
+                    style: TextStyle(color: ColorsConstants.customBackground),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
+                    child: Text(
+                      'Đăng nhập',
+                      style: TextStyle(
+                        color: ColorsConstants.yellowPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

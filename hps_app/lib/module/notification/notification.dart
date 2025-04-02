@@ -37,45 +37,53 @@ class NotificationScreen extends StatelessWidget {
               children: [
                 Text(
                   'Hôm nay',
-                  style: TextStyle(color: Colors.white, fontSize: 14,fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                Text('Xem tất cả', style: TextStyle(color: Colors.white,fontSize: 12,)),
+                Text(
+                  'Xem tất cả',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
               ],
             ),
-          ),SizedBox(height: 16),
+          ),
+          SizedBox(height: 16),
           Expanded(
             child: ListView(
               padding: EdgeInsets.all(16.0),
               children: [
                 NotificationItem(
-                  images: 'assets/image/Frame.png',
+                  images: 'assets/images/Frame.png',
                   title: 'Thanh toán thành công',
                   content:
                       'Chúc mừng bạn đã đặt lịch sử dụng dịch vụ tại Tran Manh HPS thành công. Rất vui lòng được phục vụ bạn.',
                 ),
                 SizedBox(height: 16),
-                Divider(color: Color(0xff677D75),height: 1,),
+                Divider(color: Color(0xff677D75), height: 1),
                 SizedBox(height: 16),
                 NotificationItem(
                   title: 'Nhắc nhở',
                   content: 'Bạn có hẹn với Tran Manh HPS vào ngày hôm nay.',
-                  images: 'assets/image/Frame.png',
+                  images: 'assets/images/Frame.png',
                 ),
                 SizedBox(height: 16),
-                Divider(color: Color(0xff677D75),height: 1,),
+                Divider(color: Color(0xff677D75), height: 1),
                 SizedBox(height: 16),
                 NotificationItem(
                   title: 'Chào mừng tới Trung tâm thông báo của Tran Manh HPS!',
                   content: 'Nhấn vào đây để tìm hiểu thêm.',
-                  images: 'assets/image/Frame.png',
+                  images: 'assets/images/Frame.png',
                 ),
                 SizedBox(height: 16),
-                Divider(color:Color(0xff677D75),height: 1,),
+                Divider(color: Color(0xff677D75), height: 1),
                 SizedBox(height: 16),
               ],
             ),
           ),
-          SizedBox(height: 16,),
+          SizedBox(height: 16),
         ],
       ),
     );
