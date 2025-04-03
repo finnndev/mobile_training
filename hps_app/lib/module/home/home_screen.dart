@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,6 +11,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<String> trendingHairImage = [
+    'assets/images/img_trending1.png',
+    'assets/images/img_trending2.png',
+  ];
+
+  final List<String> bannerImages = [
+    'assets/images/img_banner.png',
+    'assets/images/img_banner.png',
+    'assets/images/img_banner.png',
+  ];
+
+  int activeIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,15 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
               text: TextSpan(
                 text: "Xin chào, ",
                 style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),
                 children: [
                   TextSpan(
                     text: "Nghĩa Lê",
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.yellow,
                     ),
@@ -57,28 +71,51 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Text(
               "Đã đến lúc sửa lại mái tóc rối của bạn rồi!",
-              style: TextStyle(color: Colors.white),
+
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
             ),
             const SizedBox(height: 16),
 
             /////
-            CarouselSlider(
+            CarouselSlider.builder(
+              itemCount: bannerImages.length,
+              itemBuilder: (context, index, realIndex) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    bannerImages[index],
+                    fit: BoxFit.cover,
+                    width: 1000,
+                  ),
+                );
+              },
               options: CarouselOptions(
                 height: 150,
                 autoPlay: true,
                 enlargeCenterPage: true,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    activeIndex = index;
+                  });
+                },
               ),
-              items:
-                  [
-                    'assets/images/img_banner.png',
-                    'assets/images/img_banner.png',
-                    'assets/images/img_banner.png',
-                  ].map((item) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(item, fit: BoxFit.cover, width: 1000),
-                    );
-                  }).toList(),
+            ),
+
+            const SizedBox(height: 8),
+            Center(
+              child: AnimatedSmoothIndicator(
+                activeIndex: activeIndex,
+                count: bannerImages.length,
+                effect: WormEffect(
+                  dotWidth: 8,
+                  dotHeight: 8,
+                  activeDotColor: Colors.yellow,
+                ),
+              ),
             ),
 
             const SizedBox(height: 16),
@@ -100,11 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 ServiceCard(icon: Icons.cut, title: "Cắt tóc", isActive: true),
-                ServiceCard(
-                  icon: Icons.all_inclusive,
-                  title: "Uốn tóc",
-                  isActive: false,
-                ),
+                ServiceCard(icon: Icons.all_inclusive, title: "Uốn tóc"),
                 ServiceCard(icon: Icons.water_drop, title: "Nhuộm tóc"),
                 ServiceCard(icon: Icons.brush, title: "Ép tóc"),
                 ServiceCard(icon: Icons.auto_fix_high, title: "Gội đầu"),
@@ -113,7 +146,63 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
 
-            //
+            // Trending Hair Styles
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Mẫu xu hướng',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'Xem tất cả',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(
+              height: 160,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: trendingHairImage.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          child: Image.asset(
+                            trendingHairImage[index],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 10,
+                          right: 10,
+                          child: Icon(
+                            Icons.favorite_outline,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -148,7 +237,6 @@ class ServiceCard extends StatelessWidget {
                   ? ColorsConstants.secondsBackground
                   : ColorsConstants.grayLight,
           borderRadius: BorderRadius.circular(10),
-
           border: Border.all(
             color:
                 isActive
