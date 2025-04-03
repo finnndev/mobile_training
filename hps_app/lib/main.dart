@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hps_app/module/notification/notification.dart';
 import 'package:hps_app/module/splash/splash_screen.dart';
 
 void main() {
@@ -11,6 +10,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: SplashScreen(), debugShowCheckedModeBanner: false);
+    return const MaterialApp(
+      home: SplashScreen(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }

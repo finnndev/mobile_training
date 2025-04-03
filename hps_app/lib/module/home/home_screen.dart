@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:hps_app/module/notification/notification.dart';
+import 'package:hps_app/module/options/options.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -36,11 +38,16 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,MaterialPageRoute(builder: (context) => NotificationScreen()),);
+            },
+
           ),
           IconButton(
             icon: const Icon(Icons.menu, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+             Navigator.push(context,MaterialPageRoute(builder: (context) => OptionsScreen()),);
+            },
           ),
         ],
       ),
