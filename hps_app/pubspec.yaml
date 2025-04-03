@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   carousel_slider: ^5.0.0
   smooth_page_indicator: ^1.2.1
+  flutter_svg: ^2.0.17
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -21,6 +22,7 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
+    - assets/svgs/
 
   fonts:
     - family: EB Garamond
