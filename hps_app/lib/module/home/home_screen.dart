@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:hps_app/module/booking/booking_screen.dart';
 import 'package:hps_app/module/notification/notification.dart';
 import 'package:hps_app/module/options/options.dart';
 import 'package:hps_app/shared/constants/colors.dart';
@@ -39,14 +40,19 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.white),
             onPressed: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context) => NotificationScreen()),);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationScreen()),
+              );
             },
-
           ),
           IconButton(
             icon: const Icon(Icons.menu, color: Colors.white),
             onPressed: () {
-             Navigator.push(context,MaterialPageRoute(builder: (context) => OptionsScreen()),);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => OptionsScreen()),
+              );
             },
           ),
         ],
@@ -143,8 +149,22 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisSpacing: 14,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                ServiceCard(icon: Icons.cut, title: "Cắt tóc", isActive: true),
-                ServiceCard(icon: Icons.all_inclusive, title: "Uốn tóc"),
+                ServiceCard(
+                  icon: Icons.cut,
+                  title: "Cắt tóc",
+                  isActive: true,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => BookingScreen()),
+                    );
+                  },
+                ),
+                ServiceCard(
+                  icon: Icons.all_inclusive,
+                  title: "Uốn tóc",
+                  isActive: false,
+                ),
                 ServiceCard(icon: Icons.water_drop, title: "Nhuộm tóc"),
                 ServiceCard(icon: Icons.brush, title: "Ép tóc"),
                 ServiceCard(icon: Icons.auto_fix_high, title: "Gội đầu"),
@@ -221,21 +241,20 @@ class ServiceCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final bool isActive;
+  final Function()? onTap;
 
   const ServiceCard({
     super.key,
     required this.icon,
     required this.title,
+    this.onTap,
     this.isActive = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:
-          () => ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text("Bạn đã chọn: $title"))),
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
