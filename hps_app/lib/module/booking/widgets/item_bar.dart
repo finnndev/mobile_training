@@ -13,9 +13,9 @@ class _ItemBarState extends State<ItemBar> {
   String selectedCreator = "";
 
   final List<Map<String, String>> creators = [
-    {"name": "Tran Manh", "image": "../assets/images/tho1.jpg"},
-    {"name": "Jun Won", "image": "../assets/images/tho2.jpg"},
-    {"name": "Woo Your", "image": "../assets/images/tho3.jpg"},
+    {"name": "Tran Manh", "image": "assets/images/tho1.jpg"},
+    {"name": "Jun Won", "image": "assets/images/tho2.jpg"},
+    {"name": "Woo Your", "image": "assets/images/tho3.jpg"},
   ];
 
   void _selectCreator(String name) {

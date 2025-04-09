@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hps_app/module/qr/qr_Screen.dart';
 import 'package:hps_app/module/splash/splash_screen.dart';
 
 void main() {
