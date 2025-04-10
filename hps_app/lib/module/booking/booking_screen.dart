@@ -38,6 +38,7 @@ class _BookingScreenState extends State<BookingScreen> {
       if (_selectedIndex < 4) {
         _selectedIndex++; // Khi nhấn "Tiếp tục", tăng chỉ số tab
       }
+      
 
       // Nếu chưa chọn ngày, chuyển sang chế độ chọn ngày
       if (!isSelectingDate) {
@@ -54,6 +55,9 @@ class _BookingScreenState extends State<BookingScreen> {
     setState(() {
       if (_selectedIndex > 0) {
         _selectedIndex--; // Giảm chỉ số tab khi nhấn "Quay lại"
+      }
+      if(_selectedIndex == 0){
+        Navigator.pop(context);
       }
 
       // Quay lại trạng thái trước
@@ -76,10 +80,7 @@ class _BookingScreenState extends State<BookingScreen> {
       appBar: buildAppBar(
         context,
         onPre: () {
-          Navigator.pop(
-            context,
-            MaterialPageRoute(builder: (context) => BookingScreen()),
-          );
+          _onBackPressed();
         },
         onNext: () {
           Navigator.push(
