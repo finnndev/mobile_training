@@ -236,10 +236,10 @@ Widget _buildBottomBar(BuildContext context) {
                 ),
               ),
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => QrScreen()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QrScreen()),
+                );
               },
 
               child: const Text(
