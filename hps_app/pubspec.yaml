@@ -23,6 +23,7 @@ flutter:
     - assets/images/
     - assets/fonts/
     - assets/svgs/
+    - assets/icons/
 
   fonts:
     - family: EB Garamond
