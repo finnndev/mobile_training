@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-PreferredSizeWidget buildAppBar(BuildContext context) {
+PreferredSizeWidget buildAppBar(
+  BuildContext context, {
+  Function()? onPre,
+  Function()? onNext,
+}) {
   return AppBar(
     backgroundColor: Color(0xFF1A3C30),
     elevation: 0,
@@ -15,9 +19,7 @@ PreferredSizeWidget buildAppBar(BuildContext context) {
         Icons.chevron_left,
         color: Colors.white,
       ), // **Nút trái (back)**
-      onPressed: () {
-        // Hành động khi nhấn nút trái
-      },
+      onPressed: onPre,
     ),
 
     actions: [
@@ -26,9 +28,7 @@ PreferredSizeWidget buildAppBar(BuildContext context) {
           Icons.chevron_right,
           color: Colors.white,
         ), // **Nút phải (next)**
-        onPressed: () {
-          // Hành động khi nhấn nút phải
-        },
+        onPressed: onNext,
       ),
     ],
   );
