@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hps_app/module/qr_payment/qr_payment_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class QrScreen extends StatelessWidget {
@@ -212,13 +213,17 @@ class QrScreen extends StatelessWidget {
           Expanded(
             child: TextButton.icon(
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Qr_Payment_Screen()),
+                );
                 ScaffoldMessenger.of(
                   context,
-                ).showSnackBar(const SnackBar(content: Text('Đã gửi mã QR')));
+                ).showSnackBar(const SnackBar(content: Text('Thanh toán thành công')));
               },
-              icon: SvgPicture.asset('assets/svgs/guiqr.svg'),
+              icon: Icon(Icons.payment),
               label: const Text(
-                'Gửi mã QR',
+                'Thanh toán',
                 style: TextStyle(color: Colors.black),
               ),
               style: TextButton.styleFrom(
