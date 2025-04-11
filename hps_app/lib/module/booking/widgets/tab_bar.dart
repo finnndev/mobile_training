@@ -28,7 +28,7 @@ class TabBarr extends StatelessWidget {
           height: 3,
           margin: EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
-            // 🔥 Tô vàng nếu index <= currentIndex
+            //  Tô vàng nếu index <= currentIndex
             color: index <= currentIndex ? Color(0xFFF3AC40) : Colors.white,
             borderRadius: BorderRadius.circular(2.5),
           ),
