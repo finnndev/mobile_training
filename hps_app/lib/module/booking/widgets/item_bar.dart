@@ -36,7 +36,7 @@ class _ItemBarState extends State<ItemBar> {
             "Chọn nhà tạo mẫu",
             style: TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: Colors.white,
               fontFamily: "Roboto",
             ),
@@ -91,6 +91,7 @@ class _ItemBarState extends State<ItemBar> {
               style: TextStyle(
                 color: isSelected ? Color(0xFFF3AC40) : Colors.white,
                 fontSize: 16,
+                fontWeight: FontWeight.w500,
                 fontFamily: "Roboto",
               ),
             ),

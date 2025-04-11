@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SelectDateScreen extends StatefulWidget {
   final String creatorName;
@@ -35,7 +36,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
 
           // **Mục chọn ngày**
           Text(
-            "Chọn ngày", // Tiêu đề phần chọn ngày
+            "Chọn ngày",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -44,15 +45,71 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
             ),
           ),
           SizedBox(height: 10),
-          // _buildMonthSelector(), // Có thể bổ sung để chọn tháng (đang bị ẩn)
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Bên trái: Tháng/Năm
+              Text(
+                "Tháng $currentMonth, $currentYear",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+
+              // Bên phải: Hai nút SVG điều hướng
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (currentMonth == 1) {
+                          currentMonth = 12;
+                          currentYear -= 1;
+                        } else {
+                          currentMonth -= 1;
+                        }
+                      });
+                    },
+                    child: SvgPicture.asset(
+                      'assets/svgs/left.svg',
+                      height: 24,
+                      width: 24,
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (currentMonth == 12) {
+                          currentMonth = 1;
+                          currentYear += 1;
+                        } else {
+                          currentMonth += 1;
+                        }
+                      });
+                    },
+                    child: SvgPicture.asset(
+                      'assets/svgs/right_while.svg',
+                      height: 24,
+                      width: 24,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
           SizedBox(height: 15),
-          _buildDateSelector(), // Chức năng chọn ngày (dựng giao diện cho việc chọn ngày)
+          _buildDateSelector(),
 
           SizedBox(height: 20),
 
           // **Mục chọn giờ**
           Text(
-            "Chọn khung giờ", // Tiêu đề phần chọn giờ
+            "Chọn khung giờ",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -61,7 +118,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
             ),
           ),
           SizedBox(height: 8),
-          _buildTimeSelector(), // Chức năng chọn giờ (dựng giao diện cho việc chọn giờ)
+          _buildTimeSelector(),
         ],
       ),
     );
@@ -73,19 +130,16 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
       height: 95,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: dates.length, // Số lượng ngày cần hiển thị
+        itemCount: dates.length,
         itemBuilder: (context, index) {
-          bool isSelected =
-              selectedDate == dates[index]; // Kiểm tra ngày được chọn
-          String weekDay = _getWeekDay(dates[index]); // Lấy thứ của ngày
+          bool isSelected = selectedDate == dates[index];
+          String weekDay = _getWeekDay(dates[index]);
 
           return GestureDetector(
             onTap: () {
               setState(() {
-                selectedDate = dates[index]; // Lưu ngày đã chọn
-                widget.onDateSelected(
-                  dates[index].toString(),
-                ); // Gọi callback khi chọn ngày
+                selectedDate = dates[index];
+                widget.onDateSelected(dates[index].toString());
               });
             },
             child: Container(
@@ -96,7 +150,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                 color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: isSelected ? Color(0xFFF3AC40) : Colors.white,
+                  color: isSelected ? Color(0xFFF3AC40) : Color(0xFF677D75),
                   width: isSelected ? 2 : 1,
                 ),
               ),
@@ -104,20 +158,23 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "${dates[index]}", // Hiển thị ngày
+                    "${dates[index]}",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: isSelected ? Color(0xFFF3AC40) : Colors.white,
                       fontSize: 20,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   SizedBox(height: 6),
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                     child: Text(
-                      weekDay, // Hiển thị thứ của ngày
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      weekDay,
+                      style: TextStyle(
+                        color: isSelected ? Color(0xFFF3AC40) : Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ],
@@ -135,40 +192,37 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
       height: 50,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: timeSlots.length, // Số lượng khung giờ cần hiển thị
+        itemCount: timeSlots.length,
         itemBuilder: (context, index) {
-          bool isSelected =
-              selectedTime == timeSlots[index]; // Kiểm tra giờ đã chọn
+          bool isSelected = selectedTime == timeSlots[index];
 
           return GestureDetector(
             onTap: () {
               setState(() {
-                selectedTime = timeSlots[index]; // Lưu giờ đã chọn
-                widget.onTimeSelected(
-                  timeSlots[index],
-                ); // Gọi callback khi chọn giờ
+                selectedTime = timeSlots[index];
+                widget.onTimeSelected(timeSlots[index]);
               });
             },
             child: Container(
-              width: 80,
+              height: 48,
+              width: 104,
               margin: EdgeInsets.symmetric(horizontal: 6),
               padding: EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: isSelected ? Color(0xFFF3AC40) : Colors.white,
+                  color: isSelected ? Color(0xFFF3AC40) : Color(0xFF677D75),
                   width: isSelected ? 2 : 1,
                 ),
               ),
               child: Center(
                 child: Text(
-                  timeSlots[index], // Hiển thị giờ
+                  timeSlots[index],
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected ? Color(0xFFF3AC40) : Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
@@ -179,8 +233,21 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
     );
   }
 
-  // Hàm lấy thứ của ngày (hiện tại trả về "Thứ 2", có thể mở rộng thêm)
+  // Hàm trả về thứ tiếng Việt từ ngày
   String _getWeekDay(int day) {
-    return "Thứ 2";
+    DateTime date = DateTime(currentYear, currentMonth, day);
+    int weekday = date.weekday;
+
+    const weekdays = {
+      1: 'Hai',
+      2: 'Ba',
+      3: 'Tư',
+      4: 'Năm',
+      5: 'Sáu',
+      6: 'Bảy',
+      7: 'CN',
+    };
+
+    return weekdays[weekday] ?? '';
   }
 }

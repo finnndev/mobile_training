@@ -19,58 +19,59 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      // height: 180,
       decoration: BoxDecoration(
         color: Color(0xFF012619),
         borderRadius: BorderRadius.circular(16),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                creatorName.isNotEmpty ? creatorName : "",
-                style: TextStyle(
-                  color: Color(0xFFF3AC40),
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Roboto",
-                ),
-              ),
-              Text(
-                "Cắt tóc",
-                style: TextStyle(
-                  color: Color(0xFFF3AC40),
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Roboto",
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
+          creatorName.isNotEmpty
+              ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    creatorName,
+                    style: TextStyle(
+                      color: Color(0xFFF3AC40),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Roboto",
+                    ),
+                  ),
+                  Text(
+                    "Cắt tóc",
+                    style: TextStyle(
+                      color: Color(0xFFF3AC40),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: "Roboto",
+                    ),
+                  ),
+                ],
+              )
+              : SizedBox.shrink(),
+
           // Hiển thị thông tin ngày và giờ
           if (selectedDate.isNotEmpty && selectedTime.isNotEmpty) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Ngày: $selectedDate",
+                  "${_formatFullDate(selectedDate)}",
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
+                    color: Color(0xFFF3AC40),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 Text(
-                  "Giờ: $selectedTime",
+                  "$selectedTime",
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
+                    color: Color(0xFFF3AC40),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
@@ -82,8 +83,8 @@ class CustomButton extends StatelessWidget {
             decoration: BoxDecoration(
               color: Color(0xFF012619),
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
             ),
             padding: EdgeInsets.all(12),
@@ -100,11 +101,11 @@ class CustomButton extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 12),
                 ),
                 child: Text(
-                  text, //  text đã được truyền vào
+                  text, // text đã được truyền vào
                   style: TextStyle(
                     color: Color(0xFF1A3C30),
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontFamily: "Roboto",
                   ),
                 ),
@@ -115,5 +116,32 @@ class CustomButton extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // Hàm định dạng: Thứ, dd/MM/yyyy
+  String _formatFullDate(String day) {
+    try {
+      final intDay = int.parse(day);
+      final now = DateTime.now();
+      final date = DateTime(now.year, now.month, intDay);
+
+      const weekdays = {
+        1: 'Thứ Hai',
+        2: 'Thứ Ba',
+        3: 'Thứ Tư',
+        4: 'Thứ Năm',
+        5: 'Thứ Sáu',
+        6: 'Thứ Bảy',
+        7: 'Chủ Nhật',
+      };
+
+      final weekday = weekdays[date.weekday] ?? '';
+      final month = date.month.toString().padLeft(2, '0');
+      final year = date.year;
+
+      return "$weekday, ${date.day} tháng $month năm $year";
+    } catch (_) {
+      return day; // fallback nếu có lỗi
+    }
   }
 }

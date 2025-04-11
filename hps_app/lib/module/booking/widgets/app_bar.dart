@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 PreferredSizeWidget buildAppBar(
   BuildContext context, {
-  Function()? onPre,
-  Function()? onNext,
+  VoidCallback? onBack,
+  VoidCallback? onNext,
 }) {
   return AppBar(
     backgroundColor: Color(0xFF1A3C30),
@@ -11,23 +12,20 @@ PreferredSizeWidget buildAppBar(
     centerTitle: true,
     title: Text(
       "Đặt lịch cắt tóc",
-      style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: "Roboto"),
-    ),
-
-    leading: IconButton(
-      icon: Icon(
-        Icons.chevron_left,
+      style: TextStyle(
         color: Colors.white,
-      ), // **Nút trái (back)**
-      onPressed: onPre,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        fontFamily: "Roboto",
+      ),
     ),
-
+    leading: IconButton(
+      icon: SvgPicture.asset('assets/svgs/left.svg', width: 24, height: 24),
+      onPressed: onBack,
+    ),
     actions: [
       IconButton(
-        icon: Icon(
-          Icons.chevron_right,
-          color: Colors.white,
-        ), // **Nút phải (next)**
+        icon: SvgPicture.asset('assets/svgs/right.svg', width: 24, height: 24),
         onPressed: onNext,
       ),
     ],
