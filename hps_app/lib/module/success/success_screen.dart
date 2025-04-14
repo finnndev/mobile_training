@@ -4,7 +4,7 @@ import '../booking/booking_screen.dart';
 import '../home/home_screen.dart';
 
 class SuccessScreen extends StatelessWidget {
-  const SuccessScreen({super.key});
+  const                     SuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
