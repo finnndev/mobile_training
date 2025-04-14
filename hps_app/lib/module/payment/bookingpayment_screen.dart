@@ -60,7 +60,7 @@ class BookingpaymentScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomBar(context),
+      // bottomNavigationBar: _buildBottomBar(context),
     );
   }
 }

@@ -7,7 +7,7 @@ class Qr_Payment_Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsConstants.backgroundColor,
+      backgroundColor: ColorsConstants.secondsBackground,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +46,6 @@ class Qr_Payment_Screen extends StatelessWidget {
               ),
             );
   }
-
   Widget _scheduling_item(BuildContext context){
     return Container(
               width: 362,
