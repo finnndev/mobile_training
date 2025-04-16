@@ -57,8 +57,10 @@ class RegisterScreen extends StatelessWidget {
               Text(
                 'Đăng Ký',
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 24,
                   color: Colors.white,
+                  fontFamily: "Roboto",
+                  fontWeight: FontWeight.w600,
                   letterSpacing: 2,
                 ),
               ),
@@ -96,7 +98,11 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 child: Text(
                   'Đăng ký',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF1A3C30),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               SizedBox(height: 10),

@@ -6,10 +6,13 @@ class ServiceScreen extends StatefulWidget {
   final String selectedTime;
   final String selectedStylist;
 
+  final Function(List<ServiceItem>) onServicesChanged;
+
   ServiceScreen({
     required this.selectedDate,
     required this.selectedTime,
     required this.selectedStylist,
+    required this.onServicesChanged,
   });
 
   @override
@@ -61,6 +64,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                         } else {
                           selectedServices.add(service);
                         }
+                        widget.onServicesChanged(selectedServices);
                       });
                     },
                     child: _buildServiceCard(service, isSelected),
@@ -73,42 +77,47 @@ class _ServiceScreenState extends State<ServiceScreen> {
   }
 
   Widget _buildServiceCard(ServiceItem service, bool isSelected) {
-    return Container(
-      width: 111,
-      height: 80,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
+    return Card(
+      color: isSelected ? const Color(0xFF1A3C30) : const Color(0xFF345147),
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isSelected ? Color(0xFFF3AC40) : Color(0xFF677D75),
+        side: BorderSide(
+          color: isSelected ? const Color(0xFFF3AC40) : const Color(0xFF677D75),
           width: isSelected ? 2 : 1,
         ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            service.iconPath,
-            width: 24,
-            height: 24,
-            colorFilter: ColorFilter.mode(
-              isSelected ? Color(0xFFF3AC40) : Colors.white,
-              BlendMode.srcIn,
-            ),
-          ),
-          const SizedBox(height: 6),
-          if (service.label.isNotEmpty)
-            Text(
-              service.label,
-              style: TextStyle(
-                color: isSelected ? Color(0xFFF3AC40) : Colors.white,
-                fontSize: 14,
-                fontFamily: "Roboto",
+      margin: EdgeInsets.zero,
+      child: SizedBox(
+        width: 111,
+        height: 80,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                service.iconPath,
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(
+                  isSelected ? const Color(0xFFF3AC40) : Colors.white,
+                  BlendMode.srcIn,
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
-        ],
+              const SizedBox(height: 6),
+              if (service.label.isNotEmpty)
+                Text(
+                  service.label,
+                  style: TextStyle(
+                    color: isSelected ? const Color(0xFFF3AC40) : Colors.white,
+                    fontSize: 14,
+                    fontFamily: "Roboto",
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

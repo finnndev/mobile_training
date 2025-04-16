@@ -22,6 +22,7 @@ class _BookingScreenState extends State<BookingScreen> {
   bool isPayment = false;
   String selectedDate = "";
   String selectedTime = "";
+  List<ServiceItem> _selectedServices = [];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -48,46 +49,45 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   void _onContinuePressed() {
-  switch (_selectedIndex) {
-    case 0:
-      if (selectedCreator.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Vui lòng chọn stylist")));
-        return;
-      }
-      setState(() => _selectedIndex = 1);
-      break;
-
-    case 1:
-      if (selectedDate.isEmpty || selectedTime.isEmpty) {
+    switch (_selectedIndex) {
+      case 0:
+        if (selectedCreator.isEmpty) {
           ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Vui lòng chọn ngày và giờ")));
-        return;
-      }
-      setState(() => _selectedIndex = 2);
-      break;
+            context,
+          ).showSnackBar(SnackBar(content: Text("Vui lòng chọn stylist")));
+          return;
+        }
+        setState(() => _selectedIndex = 1);
+        break;
 
-    case 2:
-      // Xác nhận hoàn tất lựa chọn trước khi thanh toán
-      // if (selectedCreator.isEmpty || selectedDate.isEmpty || selectedTime.isEmpty) {
-      //   print("Thiếu thông tin để tiếp tục");
-      //   return;
-      // }
-      setState(() => _selectedIndex = 3);
-      break;
+      case 1:
+        if (selectedDate.isEmpty || selectedTime.isEmpty) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Vui lòng chọn ngày và giờ")));
+          return;
+        }
+        setState(() => _selectedIndex = 2);
+        break;
 
-    case 3:
-      // Thanh toán thành công, chuyển sang màn hình hoàn tất
-      setState(() => _selectedIndex = 5);
-      break;
+      case 2:
+        // Xác nhận hoàn tất lựa chọn trước khi thanh toán
+        // if (selectedCreator.isEmpty || selectedDate.isEmpty || selectedTime.isEmpty) {
+        //   print("Thiếu thông tin để tiếp tục");
+        //   return;
+        // }
+        setState(() => _selectedIndex = 3);
+        break;
 
-    default:
-      break;
+      case 3:
+        // Thanh toán thành công, chuyển sang màn hình hoàn tất
+        setState(() => _selectedIndex = 5);
+        break;
+
+      default:
+        break;
+    }
   }
-}
-
 
   void _onNextPressed() {
     _onContinuePressed();
@@ -139,6 +139,11 @@ class _BookingScreenState extends State<BookingScreen> {
                       selectedDate: selectedDate,
                       selectedTime: selectedTime,
                       selectedStylist: selectedCreator,
+                      onServicesChanged: (List<ServiceItem> selected) {
+                        setState(() {
+                          _selectedServices = selected;
+                        });
+                      },
                     );
                   case 3:
                     return BookingpaymentScreen();
@@ -163,6 +168,8 @@ class _BookingScreenState extends State<BookingScreen> {
                 text: "Tiếp tục",
                 selectedDate: selectedDate,
                 selectedTime: selectedTime,
+                selectedServices:
+                    _selectedServices.map((e) => e.label).toList(),
               ),
         ],
       ),
