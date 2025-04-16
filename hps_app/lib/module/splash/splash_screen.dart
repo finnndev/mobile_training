@@ -71,13 +71,14 @@ class _SplashScreenState extends State<SplashScreen> {
             child:
                 _showButton
                     ? Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      width: 361,
+                      height: 56,
+
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFFFFB347),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         onPressed: () {
@@ -90,7 +91,12 @@ class _SplashScreenState extends State<SplashScreen> {
                         },
                         child: Text(
                           " Bắt đầu ",
-                          style: TextStyle(color: Colors.black, fontSize: 18),
+                          style: TextStyle(
+                            color: Color(0xFF1A3C30),
+                            fontSize: 16,
+                            fontFamily: "Roboto",
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     )

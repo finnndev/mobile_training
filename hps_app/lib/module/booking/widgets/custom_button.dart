@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   final String creatorName;
   final VoidCallback onPressed;
-  final String text; // Thêm tham số `text` cho nút
+  final String text;
   final String selectedDate;
   final String selectedTime;
+  final List<String> selectedServices;
 
   CustomButton({
     required this.creatorName,
@@ -13,6 +14,7 @@ class CustomButton extends StatelessWidget {
     required this.text,
     required this.selectedDate,
     required this.selectedTime,
+    required this.selectedServices,
   });
 
   @override
@@ -41,13 +43,15 @@ class CustomButton extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "Cắt tóc",
+                    _buildServiceLabel(),
                     style: TextStyle(
                       color: Color(0xFFF3AC40),
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       fontFamily: "Roboto",
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               )
@@ -143,5 +147,10 @@ class CustomButton extends StatelessWidget {
     } catch (_) {
       return day; // fallback nếu có lỗi
     }
+  }
+
+  String _buildServiceLabel() {
+    if (selectedServices.isEmpty) return "Cắt tóc";
+    return "Cắt tóc, ${selectedServices.join(', ')}";
   }
 }

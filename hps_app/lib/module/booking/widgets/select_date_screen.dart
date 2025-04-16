@@ -142,42 +142,52 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                 widget.onDateSelected(dates[index].toString());
               });
             },
-            child: Container(
-              width: 56,
+
+            child: Card(
               margin: EdgeInsets.symmetric(horizontal: 6),
-              padding: EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
+              color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
+                side: BorderSide(
                   color: isSelected ? Color(0xFFF3AC40) : Color(0xFF677D75),
                   width: isSelected ? 2 : 1,
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "${dates[index]}",
-                    style: TextStyle(
-                      color: isSelected ? Color(0xFFF3AC40) : Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-                    child: Text(
-                      weekDay,
-                      style: TextStyle(
-                        color: isSelected ? Color(0xFFF3AC40) : Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: SizedBox(
+                  width: 56,
+                  height: 95,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${dates[index]}",
+                        style: TextStyle(
+                          color: isSelected ? Color(0xFFF3AC40) : Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 6),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 6,
+                        ),
+                        child: Text(
+                          weekDay,
+                          style: TextStyle(
+                            color:
+                                isSelected ? Color(0xFFF3AC40) : Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           );
@@ -203,26 +213,31 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                 widget.onTimeSelected(timeSlots[index]);
               });
             },
-            child: Container(
-              height: 48,
-              width: 104,
+            child: Card(
+              color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
               margin: EdgeInsets.symmetric(horizontal: 6),
-              padding: EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
+
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
+                side: BorderSide(
                   color: isSelected ? Color(0xFFF3AC40) : Color(0xFF677D75),
                   width: isSelected ? 2 : 1,
                 ),
               ),
-              child: Center(
-                child: Text(
-                  timeSlots[index],
-                  style: TextStyle(
-                    color: isSelected ? Color(0xFFF3AC40) : Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: SizedBox(
+                  height: 48,
+                  width: 104,
+                  child: Center(
+                    child: Text(
+                      timeSlots[index],
+                      style: TextStyle(
+                        color: isSelected ? Color(0xFFF3AC40) : Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
                 ),
               ),
