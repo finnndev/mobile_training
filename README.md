@@ -56,7 +56,7 @@ git add .                       # Add all changed files
 git commit -m "action(scope): description of the changes"
 
 # Create and switch to a new branch
-git checkout -b login/your-name
+git checkout -b new-branch-name
 
 # Switch between branches
 git checkout main
@@ -103,6 +103,25 @@ git log --oneline --graph       # View history in graph format
 
 7. **Merge** after approval
 
+### Rebase code from main branch or other branch
+
+1. Make sure you are on the correct branch
+   ```bash
+   git checkout your-branch
+   
+2. Update changes from remote
+   ```bash
+   git fetch origin
+   
+3. Rebase from main branch or other branch
+   ```bash
+   git rebase origin/main
+
+   or
+
+   git rebase origin/feature/other-member
+
+ 
 ### Handling Conflicts
 
 When encountering conflicts during merge or rebase:
