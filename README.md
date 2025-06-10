@@ -60,10 +60,10 @@ git checkout -b new-branch-name
 
 # Switch between branches
 git checkout main
-git checkout login/your-name
+git checkout your_branch
 
 # Push your code to the remote repository
-git push origin login/your-name
+git push origin your_branch
 
 # Update your code from the remote repository
 git pull origin main
@@ -83,7 +83,7 @@ git log --oneline --graph       # View history in graph format
 
 2. **Create a new branch for your task**:
    ```bash
-   git checkout -b feature-name/your-name
+   git checkout -b your_branch
    ```
 
 3. **Write code and commit frequently**:
@@ -94,7 +94,7 @@ git log --oneline --graph       # View history in graph format
 
 4. **Push your code to the repository**:
    ```bash
-   git push origin feature-name/your-name
+   git push origin your_branch
    ```
 
 5. **Create a Pull Request** on GitHub/GitLab for review
