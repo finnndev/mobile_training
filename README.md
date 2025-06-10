@@ -89,7 +89,7 @@ git log --oneline --graph       # View history in graph format
 3. **Write code and commit frequently**:
    ```bash
    git add .
-   git commit -m "Implement login UI"
+   git commit -m "action(scope): description of the changes"
    ```
 
 4. **Push your code to the repository**:
