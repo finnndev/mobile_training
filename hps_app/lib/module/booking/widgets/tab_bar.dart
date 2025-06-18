@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hps_app/shared/constants/colors.dart';
+
 
 class TabBarr extends StatelessWidget {
   final int currentIndex;
@@ -6,12 +8,13 @@ class TabBarr extends StatelessWidget {
 
   TabBarr({required this.currentIndex, required this.onTap});
 
+  
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: Color(0xFF1A3C30), // Màu nền
+        color: ColorsConstants.secondsBackground, 
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -20,6 +23,7 @@ class TabBarr extends StatelessWidget {
     );
   }
 
+  
   Widget _buildStep(int index) {
     return Expanded(
       child: Padding(
@@ -28,8 +32,8 @@ class TabBarr extends StatelessWidget {
           height: 3,
           margin: EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
-            //  Tô vàng nếu index <= currentIndex
-            color: index <= currentIndex ? Color(0xFFF3AC40) : Colors.white,
+        
+            color: index <= currentIndex ? ColorsConstants.yellowPrimary : ColorsConstants.text,
             borderRadius: BorderRadius.circular(2.5),
           ),
         ),
