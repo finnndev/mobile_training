@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hps_app/module/qr/qr_Screen.dart';
-import 'package:hps_app/module/splash/splash_screen.dart';
+import 'package:hps_app/module/splash/screens/splash_screen.dart';
 
-import 'module/bookingSchedule/bookingSchedule_screen.dart';
+import 'module/bookingSchedule/screens/bookingSchedule_screen.dart';
 
 void main() {
   runApp(const MainApp());

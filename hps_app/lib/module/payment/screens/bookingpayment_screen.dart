@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hps_app/module/qr/qr_screen.dart';
+import 'package:hps_app/module/qr/screens/qr_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class BookingpaymentScreen extends StatelessWidget {

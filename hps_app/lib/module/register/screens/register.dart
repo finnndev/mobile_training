@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hps_app/module/login/login_screen.dart';
+import 'package:hps_app/module/login/screens/login_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class RegisterScreen extends StatelessWidget {

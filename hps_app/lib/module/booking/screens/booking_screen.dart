@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hps_app/module/qr/qr_screen.dart';
-import 'package:hps_app/module/success/success_screen.dart';
-import '../../shared/constants/colors.dart';
-import '../payment/bookingpayment_screen.dart';
-import 'widgets/app_bar.dart';
-import 'widgets/item_bar.dart';
-import 'widgets/custom_button.dart';
-import 'widgets/tab_bar.dart';
-import 'widgets/select_date_screen.dart';
-import 'widgets/service_screen.dart';
+import 'package:hps_app/module/qr/screens/qr_screen.dart';
+import 'package:hps_app/module/success/screens/success_screen.dart';
+import '../../../shared/constants/colors.dart';
+import '../../payment/screens/bookingpayment_screen.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/item_bar.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/tab_bar.dart';
+import 'select_date_screen.dart';
+import 'service_screen.dart';
 
 class BookingScreen extends StatefulWidget {
   @override
