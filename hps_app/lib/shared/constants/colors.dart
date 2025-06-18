@@ -9,5 +9,8 @@ class ColorsConstants {
   static const Color gray = Color(0xFF345147);
   static const Color darkLeafGreen = Color(0xFF17362B);
   static const Color mistGreen = Color(0xFF677D75);
-  static const Color honeyGold = Color(0xFFF3AC40);
+  
+  static const Color text = Color(0xFFFFFFFF);
+
+  
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hps_app/module/qr/screens/qr_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class BookingpaymentScreen extends StatelessWidget {
@@ -30,8 +29,7 @@ class BookingpaymentScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // _buildProgressBar(),
-                // const SizedBox(height: 16),
+                
                 _buildBookingInfoCard(),
                 const SizedBox(height: 24),
                 const Text(
@@ -149,9 +147,9 @@ Widget _buildEWalletSelector() {
     margin: const EdgeInsets.only(top: 8),
     padding: const EdgeInsets.all(12),
     decoration: BoxDecoration(
-      color: ColorsConstants.darkLeafGreen, //
+      color: ColorsConstants.darkLeafGreen, 
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: ColorsConstants.honeyGold, width: 1.2),
+      border: Border.all(color: ColorsConstants.yellowPrimary, width: 1.2),
     ),
     child: Row(
       children: [
@@ -192,80 +190,13 @@ Widget _buildEWalletSelector() {
   );
 }
 
-Widget _buildBottomBar(BuildContext context) {
-  return SafeArea(
-    child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: Color(0xFF0D2C24),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Tổng thanh toán:',
-                style: TextStyle(
-                  color: ColorsConstants.honeyGold,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Text(
-                '250.000 VND',
-                style: TextStyle(
-                  color: ColorsConstants.honeyGold,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorsConstants.honeyGold,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => QrScreen()),
-                );
-              },
-
-              child: const Text(
-                'Tạo mã thanh toán',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
 
 class _PaymentOption extends StatelessWidget {
-  final IconData? icon;
   final String label;
   final bool selected;
   final String? imageUrl;
 
   const _PaymentOption({
-    this.icon,
     required this.label,
     required this.selected,
     this.imageUrl,
@@ -283,7 +214,7 @@ class _PaymentOption extends StatelessWidget {
               selected ? ColorsConstants.darkLeafGreen : ColorsConstants.gray,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: selected ? ColorsConstants.honeyGold : Color(0xFF677D75),
+            color: selected ? ColorsConstants.yellowPrimary : Color(0xFF677D75),
             width: 1.5,
           ),
         ),
@@ -296,14 +227,14 @@ class _PaymentOption extends StatelessWidget {
                 fit: BoxFit.cover,
                 height: 24,
                 width: 24,
-                color: selected ? ColorsConstants.honeyGold : null,
+                color: selected ? ColorsConstants.yellowPrimary : null,
               ),
 
             const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
-                color: selected ? ColorsConstants.honeyGold : Colors.white,
+                color: selected ? ColorsConstants.yellowPrimary : Colors.white,
               ),
             ),
           ],

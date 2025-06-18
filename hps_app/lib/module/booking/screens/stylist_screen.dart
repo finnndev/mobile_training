@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:hps_app/shared/constants/colors.dart';
 
-class ItemBar extends StatefulWidget {
+
+class StylistSelector extends StatefulWidget {
   final Function(String) onCreatorSelected;
 
-  ItemBar({required this.onCreatorSelected});
+  const StylistSelector({super.key, required this.onCreatorSelected});
 
   @override
-  _ItemBarState createState() => _ItemBarState();
+  _StylistSelectorState createState() => _StylistSelectorState();
 }
 
-class _ItemBarState extends State<ItemBar> {
+
+class _StylistSelectorState extends State<StylistSelector> {
   String selectedCreator = "";
 
+ 
   final List<Map<String, String>> creators = [
     {"name": "Tran Manh", "image": "assets/images/tho1.jpg"},
     {"name": "Jun Won", "image": "assets/images/tho2.jpg"},
     {"name": "Woo Your", "image": "assets/images/tho3.jpg"},
   ];
+
+  static const double _cardWidth = 127.0;
+  static const double _cardHeight = 162.0;
+  static const double _imageSize = 95.0;
+  static const double _horizontalMargin = 8.0;
+  static const double _verticalPadding = 8.0;
 
   void _selectCreator(String name) {
     setState(() {
@@ -25,25 +35,26 @@ class _ItemBarState extends State<ItemBar> {
     widget.onCreatorSelected(name);
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Text(
             "Chọn nhà tạo mẫu",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: ColorsConstants.text, // Sử dụng text
               fontFamily: "Roboto",
             ),
           ),
         ),
         SizedBox(
-          height: 160,
+          height: _cardHeight,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: creators.length,
@@ -56,26 +67,25 @@ class _ItemBarState extends State<ItemBar> {
     );
   }
 
+
   Widget _buildCreatorItem(Map<String, String> creator) {
-    bool isSelected = selectedCreator == creator["name"];
+    final isSelected = selectedCreator == creator["name"];
 
     return GestureDetector(
       onTap: () => _selectCreator(creator["name"]!),
       child: Card(
-        color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
-
+        color: isSelected ? ColorsConstants.secondsBackground : ColorsConstants.gray,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(
-            color: isSelected ? Color(0xFFF3AC40) : Color(0xFF677D75),
+            color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.grayLight,
             width: 2,
           ),
         ),
-        margin: EdgeInsets.symmetric(horizontal: 8),
+        margin: EdgeInsets.symmetric(horizontal: _horizontalMargin),
         child: SizedBox(
-          width: 127,
-          height: 162,
-
+          width: _cardWidth,
+          height: _cardHeight,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -83,16 +93,16 @@ class _ItemBarState extends State<ItemBar> {
                 borderRadius: BorderRadius.circular(50),
                 child: Image.asset(
                   creator["image"]!,
-                  width: 95,
-                  height: 95,
+                  width: _imageSize,
+                  height: _imageSize,
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: _verticalPadding),
               Text(
                 creator["name"]!,
                 style: TextStyle(
-                  color: isSelected ? Color(0xFFF3AC40) : Colors.white,
+                  color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.text,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   fontFamily: "Roboto",

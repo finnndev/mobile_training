@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hps_app/shared/constants/colors.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class SelectDateScreen extends StatefulWidget {
   final String creatorName;
-  final Function(String) onDateSelected; // Callback để truyền ngày
-  final Function(String) onTimeSelected; // Callback để truyền giờ
+  final Function(DateTime) onDateSelected;
+  final Function(String) onTimeSelected;
 
-  SelectDateScreen({
+  const SelectDateScreen({
+    super.key,
     required this.creatorName,
     required this.onDateSelected,
     required this.onTimeSelected,
@@ -16,15 +19,19 @@ class SelectDateScreen extends StatefulWidget {
   _SelectDateScreenState createState() => _SelectDateScreenState();
 }
 
+
 class _SelectDateScreenState extends State<SelectDateScreen> {
   int? selectedDate;
   String? selectedTime;
-  int currentMonth = 4;
-  int currentYear = 2025;
+  int currentMonth = DateTime.now().month; 
+  int currentYear = DateTime.now().year;  
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
 
-  final List<int> dates = [15, 16, 17, 18, 19, 20, 21]; // Dữ liệu ngày
-  final List<String> timeSlots = ["08:00", "08:30", "09:00"]; // Dữ liệu giờ
+  final List<String> timeSlots = ["08:00", "08:30", "09:00","09:30","10:00"]; 
 
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,87 +41,31 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
         children: [
           SizedBox(height: 15),
 
-          // **Mục chọn ngày**
+          
           Text(
             "Chọn ngày",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               fontFamily: "Roboto",
-              color: Colors.white,
+              color: ColorsConstants.text,
             ),
           ),
           SizedBox(height: 10),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Bên trái: Tháng/Năm
-              Text(
-                "Tháng $currentMonth, $currentYear",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-
-              // Bên phải: Hai nút SVG điều hướng
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (currentMonth == 1) {
-                          currentMonth = 12;
-                          currentYear -= 1;
-                        } else {
-                          currentMonth -= 1;
-                        }
-                      });
-                    },
-                    child: SvgPicture.asset(
-                      'assets/svgs/left.svg',
-                      height: 24,
-                      width: 24,
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (currentMonth == 12) {
-                          currentMonth = 1;
-                          currentYear += 1;
-                        } else {
-                          currentMonth += 1;
-                        }
-                      });
-                    },
-                    child: SvgPicture.asset(
-                      'assets/svgs/right_while.svg',
-                      height: 24,
-                      width: 24,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          SizedBox(height: 15),
-          _buildDateSelector(),
+        
+          _buildCalendar(),
 
           SizedBox(height: 20),
 
-          // **Mục chọn giờ**
+         
           Text(
             "Chọn khung giờ",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               fontFamily: "Roboto",
-              color: Colors.white,
+              color: ColorsConstants.text,
             ),
           ),
           SizedBox(height: 8),
@@ -124,79 +75,85 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
     );
   }
 
-  // **Phần chọn ngày**
-  Widget _buildDateSelector() {
-    return SizedBox(
-      height: 95,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: dates.length,
-        itemBuilder: (context, index) {
-          bool isSelected = selectedDate == dates[index];
-          String weekDay = _getWeekDay(dates[index]);
-
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedDate = dates[index];
-                widget.onDateSelected(dates[index].toString());
-              });
-            },
-
-            child: Card(
-              margin: EdgeInsets.symmetric(horizontal: 6),
-              color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-                side: BorderSide(
-                  color: isSelected ? Color(0xFFF3AC40) : Color(0xFF677D75),
-                  width: isSelected ? 2 : 1,
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: SizedBox(
-                  width: 56,
-                  height: 95,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${dates[index]}",
-                        style: TextStyle(
-                          color: isSelected ? Color(0xFFF3AC40) : Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: 6),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 6,
-                        ),
-                        child: Text(
-                          weekDay,
-                          style: TextStyle(
-                            color:
-                                isSelected ? Color(0xFFF3AC40) : Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
+  
+  Widget _buildCalendar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: ColorsConstants.gray,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: ColorsConstants.grayLight, 
+          width: 1.5,
+        ),
+      ),
+      child: TableCalendar(
+        firstDay: DateTime(currentYear - 1, currentMonth, 1),
+        lastDay: DateTime(currentYear + 1, currentMonth, 31),
+        focusedDay: _focusedDay,
+        calendarFormat: _calendarFormat,
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
         },
+        enabledDayPredicate: (day) {
+          return !day.isBefore(DateTime.now().subtract(Duration(days: 1)));
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay; 
+            widget.onDateSelected(selectedDay); 
+          });
+        },
+        onPageChanged: (focusedDay) {
+          _focusedDay = focusedDay;
+        },
+        headerStyle: HeaderStyle(
+          formatButtonVisible: false,
+          titleCentered: true,
+          titleTextStyle: TextStyle(
+            color: ColorsConstants.text,
+            fontSize: 16,
+            fontWeight: FontWeight.bold, 
+          ),
+          leftChevronIcon: SvgPicture.asset(
+            'assets/svgs/left.svg',
+            height: 24,
+            width: 24,
+          ),
+          rightChevronIcon: SvgPicture.asset(
+            'assets/svgs/right_while.svg',
+            height: 24,
+            width: 24,
+          ),
+        ),
+        calendarStyle: CalendarStyle(
+          todayDecoration: BoxDecoration(
+            color: Colors.transparent,
+            shape: BoxShape.circle,
+          ),
+          selectedDecoration: BoxDecoration(
+            border: Border.all(color: ColorsConstants.yellowPrimary, width: 2),
+            color: Colors.transparent,
+            shape: BoxShape.circle,
+          ),
+          defaultTextStyle: TextStyle(color: Colors.white),
+          weekendTextStyle: TextStyle(color: Colors.white),
+          holidayTextStyle: TextStyle(color: Colors.red),
+          selectedTextStyle: TextStyle(color: ColorsConstants.yellowPrimary, fontWeight: FontWeight.bold),
+          todayTextStyle: TextStyle(color: Colors.white, ),
+          outsideTextStyle: TextStyle(color: ColorsConstants.grayLight),
+          cellMargin: EdgeInsets.all(6), 
+        
+        ),
+        daysOfWeekStyle: DaysOfWeekStyle(
+          weekdayStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          weekendStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
 
-  // **Phần chọn giờ**
+
   Widget _buildTimeSelector() {
     return SizedBox(
       height: 50,
@@ -214,13 +171,12 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
               });
             },
             child: Card(
-              color: isSelected ? Color(0xFF1A3C30) : Color(0xFF345147),
+              color: isSelected ? ColorsConstants.secondsBackground : ColorsConstants.gray,
               margin: EdgeInsets.symmetric(horizontal: 6),
-
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
                 side: BorderSide(
-                  color: isSelected ? Color(0xFFF3AC40) : Color(0xFF677D75),
+                  color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.grayLight,
                   width: isSelected ? 2 : 1,
                 ),
               ),
@@ -233,7 +189,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                     child: Text(
                       timeSlots[index],
                       style: TextStyle(
-                        color: isSelected ? Color(0xFFF3AC40) : Colors.white,
+                        color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.text,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
@@ -248,21 +204,5 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
     );
   }
 
-  // Hàm trả về thứ tiếng Việt từ ngày
-  String _getWeekDay(int day) {
-    DateTime date = DateTime(currentYear, currentMonth, day);
-    int weekday = date.weekday;
-
-    const weekdays = {
-      1: 'Hai',
-      2: 'Ba',
-      3: 'Tư',
-      4: 'Năm',
-      5: 'Sáu',
-      6: 'Bảy',
-      7: 'CN',
-    };
-
-    return weekdays[weekday] ?? '';
-  }
+  
 }

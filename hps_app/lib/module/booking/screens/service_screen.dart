@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hps_app/shared/constants/colors.dart';
+
 
 class ServiceScreen extends StatefulWidget {
-  final String selectedDate;
+  final DateTime? selectedDate;
   final String selectedTime;
   final String selectedStylist;
-
   final Function(List<ServiceItem>) onServicesChanged;
 
-  ServiceScreen({
+  const ServiceScreen({
+    super.key,
     required this.selectedDate,
     required this.selectedTime,
     required this.selectedStylist,
@@ -18,6 +20,7 @@ class ServiceScreen extends StatefulWidget {
   @override
   _ServiceScreenState createState() => _ServiceScreenState();
 }
+
 
 class _ServiceScreenState extends State<ServiceScreen> {
   final List<ServiceItem> services = [
@@ -30,6 +33,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
 
   final List<ServiceItem> selectedServices = [];
 
+ 
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -42,47 +46,46 @@ class _ServiceScreenState extends State<ServiceScreen> {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: ColorsConstants.text, 
               fontFamily: "Roboto",
             ),
           ),
         ),
-
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Wrap(
             spacing: 12,
             runSpacing: 12,
-            children:
-                services.map((service) {
-                  final isSelected = selectedServices.contains(service);
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          selectedServices.remove(service);
-                        } else {
-                          selectedServices.add(service);
-                        }
-                        widget.onServicesChanged(selectedServices);
-                      });
-                    },
-                    child: _buildServiceCard(service, isSelected),
-                  );
-                }).toList(),
+            children: services.map((service) {
+              final isSelected = selectedServices.contains(service);
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      selectedServices.remove(service);
+                    } else {
+                      selectedServices.add(service);
+                    }
+                    widget.onServicesChanged(selectedServices);
+                  });
+                },
+                child: _buildServiceCard(service, isSelected),
+              );
+            }).toList(),
           ),
         ),
       ],
     );
   }
 
+  
   Widget _buildServiceCard(ServiceItem service, bool isSelected) {
     return Card(
-      color: isSelected ? const Color(0xFF1A3C30) : const Color(0xFF345147),
+      color: isSelected ? ColorsConstants.secondsBackground : ColorsConstants.gray,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: isSelected ? const Color(0xFFF3AC40) : const Color(0xFF677D75),
+          color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.grayLight,
           width: isSelected ? 2 : 1,
         ),
       ),
@@ -100,7 +103,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                 width: 24,
                 height: 24,
                 colorFilter: ColorFilter.mode(
-                  isSelected ? const Color(0xFFF3AC40) : Colors.white,
+                  isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.text,
                   BlendMode.srcIn,
                 ),
               ),
@@ -109,7 +112,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                 Text(
                   service.label,
                   style: TextStyle(
-                    color: isSelected ? const Color(0xFFF3AC40) : Colors.white,
+                    color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.text,
                     fontSize: 14,
                     fontFamily: "Roboto",
                   ),
@@ -122,6 +125,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
     );
   }
 }
+
 
 class ServiceItem {
   final String iconPath;
