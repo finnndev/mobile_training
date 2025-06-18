@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hps_app/module/qr_payment/qr_payment_screen.dart';
+
+
+import 'package:hps_app/module/qr/screens/qr_payment_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class QrScreen extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hps_app/module/home/home_screen.dart';
-import 'package:hps_app/module/register/register.dart';
+import 'package:hps_app/module/home/screens/home_screen.dart';
+import 'package:hps_app/module/register/screens/register.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class LoginScreen extends StatefulWidget {

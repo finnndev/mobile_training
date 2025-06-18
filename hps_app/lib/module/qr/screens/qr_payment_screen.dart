@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hps_app/module/bookingSchedule/bookingSchedule_screen.dart';
-import 'package:hps_app/module/home/home_screen.dart';
+import 'package:hps_app/module/bookingSchedule/screens/bookingSchedule_screen.dart';
+import 'package:hps_app/module/home/screens/home_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class Qr_Payment_Screen extends StatelessWidget {

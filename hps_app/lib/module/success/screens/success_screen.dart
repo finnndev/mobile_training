@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../booking/booking_screen.dart';
-import '../home/home_screen.dart';
+import '../../booking/screens/booking_screen.dart';
+import '../../home/screens/home_screen.dart';
 
 class SuccessScreen extends StatelessWidget {
   const                     SuccessScreen({super.key});

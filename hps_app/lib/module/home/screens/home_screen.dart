@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:hps_app/module/booking/booking_screen.dart';
-import 'package:hps_app/module/notification/notification.dart';
-import 'package:hps_app/module/options/options.dart';
+import 'package:hps_app/module/booking/screens/booking_screen.dart';
+import 'package:hps_app/module/notification/screens/notification.dart';
+import 'package:hps_app/module/options/screens/options.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
