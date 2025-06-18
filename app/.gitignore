@@ -1,0 +1,22 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration
+local.properties
+.idea/
+*.iml
+
+# Log & temp
+*.log
+*.temp
+
+# Android Studio Navigation
+.navigation/
+captures/
+
+# Keystore files
+*.jks
+*.keystore
