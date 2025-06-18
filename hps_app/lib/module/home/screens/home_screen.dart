@@ -84,7 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Text(
               "Đã đến lúc sửa lại mái tóc rối của bạn rồi!",
-
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 14,
@@ -92,8 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-
-            /////
             CarouselSlider.builder(
               itemCount: bannerImages.length,
               itemBuilder: (context, index, realIndex) {

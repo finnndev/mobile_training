@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hps_app/module/home/screens/home_screen.dart';
 import 'package:hps_app/module/register/screens/register.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import 'package:hps_app/shared/constants/mock_data.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,134 +12,39 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late TextEditingController _fullNameController;
+  late TextEditingController _passwordController;
+  bool _isLoading = false;
+  bool _isPasswordVisible = false;
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorsConstants.secondsBackground,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/img_logo.png',
-                width: 120,
-                height: 120,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(height: 5),
-              Text(
-                "Tran Manh",
-                style: TextStyle(
-                  color: ColorsConstants.yellowPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 46,
-                  fontFamily: 'EB Garamond',
-                ),
-              ),
-              Text(
-                "HAIR PASSION STUDIO",
-                style: TextStyle(
-                  fontFamily: 'EB Garamond',
-                  fontSize: 14,
-                  color: ColorsConstants.yellowPrimary,
-                ),
-              ),
-              SizedBox(height: 40),
-              Text(
-                "Đăng nhập",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(height: 32),
-              _buildTextField('Số điện thoại hoặc email'),
-              SizedBox(height: 32),
-              _buildTextField('Mật khẩu', isPassword: true),
-              SizedBox(height: 16),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  'Quên mật khẩu ?',
-                  style: TextStyle(color: ColorsConstants.customBackground),
-                ),
-              ),
-              SizedBox(height: 32),
-              _buildButton(
-                'Đăng nhập',
-                ColorsConstants.yellowPrimary,
-                Colors.black,
-              ),
-              SizedBox(height: 16),
-              Text(
-                'Hoặc',
-                style: TextStyle(color: ColorsConstants.customBackground),
-              ),
-              SizedBox(height: 16),
-              // _buildButton(
-              //   'Đăng nhập với facebook',
-              //   Colors.white,
-              //   Colors.black,
-              //   icon: Icons.facebook,
-              // ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white70),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  'Đăng nhập bằng facebook',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Bạn đã có tài khoản chưa?',
-                    style: TextStyle(color: ColorsConstants.customBackground),
-                  ),
-                  SizedBox(width: 5),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterScreen(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Đăng ký',
-                      style: TextStyle(
-                        color: ColorsConstants.yellowPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void initState() {
+    super.initState();
+    _fullNameController = TextEditingController();
+    _passwordController = TextEditingController();
+    _loadSavedData();
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadSavedData() async {
+    List<Map<String, String>> users = await MockData.getUsers();
+    if (users.isNotEmpty) {
+      Map<String, String> lastUser = users.last;
+      _fullNameController.text = lastUser['fullName'] ?? '';
+      _passwordController.text = lastUser['password'] ?? '';
+    }
   }
 
   Widget _buildTextField(String hint, {bool isPassword = false}) {
     return TextField(
-      obscureText: isPassword,
+      controller: isPassword ? _passwordController : _fullNameController,
+      obscureText: isPassword ? !_isPasswordVisible : false,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: hint,
@@ -150,6 +56,22 @@ class _LoginScreenState extends State<LoginScreen> {
           borderSide: BorderSide.none,
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        suffixIcon:
+            isPassword
+                ? IconButton(
+                  icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: Colors.white70,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                )
+                : null,
       ),
     );
   }
@@ -170,13 +92,40 @@ class _LoginScreenState extends State<LoginScreen> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+        onPressed:
+            _isLoading
+                ? null
+                : () async {
+                  setState(() => _isLoading = true);
+                  String fullName = _fullNameController.text.trim();
+                  String password = _passwordController.text.trim();
+                  List<Map<String, String>> users = await MockData.getUsers();
+                  bool isValid = users.any(
+                    (user) =>
+                        user['fullName'] == fullName &&
+                        user['password'] == password,
+                  );
 
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
-        },
+                  if (isValid) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Sai họ và tên hoặc mật khẩu! Vui lòng thử lại.',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                  setState(() => _isLoading = false);
+                },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -190,8 +139,160 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            if (_isLoading)
+              const Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                    strokeWidth: 2,
+                  ),
+                ),
+              ),
           ],
         ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: ColorsConstants.secondsBackground,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/img_logo.png',
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    "Tran Manh",
+                    style: TextStyle(
+                      color: ColorsConstants.yellowPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 46,
+                      fontFamily: 'EB Garamond',
+                    ),
+                  ),
+                  const Text(
+                    "HAIR PASSION STUDIO",
+                    style: TextStyle(
+                      fontFamily: 'EB Garamond',
+                      fontSize: 14,
+                      color: ColorsConstants.yellowPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  const Text(
+                    "Đăng nhập",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  _buildTextField('Họ và tên'),
+                  const SizedBox(height: 32),
+                  _buildTextField('Mật khẩu', isPassword: true),
+                  const SizedBox(height: 16),
+                  const Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      'Quên mật khẩu ?',
+                      style: TextStyle(color: ColorsConstants.customBackground),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  _buildButton(
+                    'Đăng nhập',
+                    ColorsConstants.yellowPrimary,
+                    Colors.black,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Hoặc',
+                    style: TextStyle(color: ColorsConstants.customBackground),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white70),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      'Đăng nhập bằng facebook',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Bạn đã có tài khoản chưa?',
+                        style: TextStyle(
+                          color: ColorsConstants.customBackground,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Đăng ký',
+                          style: TextStyle(
+                            color: ColorsConstants.yellowPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+          if (_isLoading)
+            Container(
+              color: Colors.black54,
+              child: Center(
+                child: Container(
+                  height: 24,
+                  width: 200,
+                  child: LinearProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    backgroundColor: Colors.red,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

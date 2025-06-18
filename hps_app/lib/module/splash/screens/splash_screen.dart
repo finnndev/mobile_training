@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:hps_app/module/login/screens/login_screen.dart';
 import 'package:hps_app/module/register/screens/register.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
@@ -12,7 +11,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool _showButton = false; // ban dau an nut
+  bool _showButton = false; 
 
   @override
   void initState() {
