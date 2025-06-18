@@ -25,26 +25,25 @@ class OptionsScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.close, color: Colors.white),
+            icon: const Icon(Icons.close, color: Colors.white),
             onPressed: () {
-              Navigator.pop(context); //Đóng màn hình tùy chọn
+              Navigator.pop(context); 
             },
           ),
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            //Thông tin người dùng
             Row(
               children: [
-                //Ảnh đại diện
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/NghiaLe.png'),
+                  backgroundImage: const AssetImage(
+                    'assets/images/NghiaLe.png',
+                  ),
                 ),
-                SizedBox(width: 16),
-                //Tên và trạng thái
+                const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -68,9 +67,8 @@ class OptionsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 24),
-            Divider(color: Color(0xff677D75)),
-            //Danh sách tùy chọn
+            const SizedBox(height: 24),
+            const Divider(color: Color(0xff677D75)),
             Expanded(
               child: ListView(
                 children: [
@@ -78,75 +76,78 @@ class OptionsScreen extends StatelessWidget {
                     icon: 'assets/svgs/settings.svg',
                     title: 'Cài đặt',
                   ),
-                  Divider(color: Color(0xff677D75)),
+                  const Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/calendar.svg',
                     title: 'Lịch đặt của tôi',
                   ),
-                  Divider(color: Color(0xff677D75)),
+                  const Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/favorite.svg',
                     title: 'Ưa thích',
                   ),
-                  Divider(color: Color(0xff677D75)),
+                  const Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/help.svg',
                     title: 'Trung tâm trợ giúp',
                   ),
-                  Divider(color: Color(0xff677D75)),
+                  const Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/policy.svg',
                     title: 'Chính sách và điều khoản',
                   ),
-                  Divider(color: Color(0xff677D75)),
+                  const Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/info.svg',
                     title: 'Về Tran Manh Hair Passion Studio',
                   ),
-                  Divider(color: Color(0xff677D75)),
+                  const Divider(color: Color(0xff677D75)),
                 ],
               ),
             ),
-            //Nút đăng xuất
             SizedBox(
               width: double.infinity,
               height: 56,
               child: InkWell(
-                onTap: () {
-                  // Điều hướng về màn hình đăng nhập và xóa tất cả màn hình trước đó
+                onTap: () async {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginScreen(),
-                    ), // Thay bằng màn hình đăng nhập của bạn
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
                     (Route<dynamic> route) => false,
                   );
-
-                  // Hiển thị thông báo đăng xuất thành công
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Đã đăng xuất!')),
                   );
                 },
-                borderRadius: BorderRadius.circular(16), // Bo góc hiệu ứng chạm
+                borderRadius: BorderRadius.circular(16),
                 child: Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: ColorsConstants.yellowPrimary, // Màu nền nút
-                    borderRadius: BorderRadius.circular(16), // Bo góc nút
+                    color: ColorsConstants.yellowPrimary,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Text(
-                    'Đăng xuất',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.logout,
+                        color: Colors.black,
+                      ), 
+                      SizedBox(width: 8),
+                      Text(
+                        'Đăng xuất',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -154,7 +155,6 @@ class OptionsScreen extends StatelessWidget {
   }
 }
 
-//Widget cho mỗi mục tùy chọn
 class OptionItem extends StatelessWidget {
   final String icon;
   final String title;
@@ -175,7 +175,6 @@ class OptionItem extends StatelessWidget {
         size: 16,
       ),
       onTap: () {
-        // Xử lý khi nhấn vào từng mục (có thể chuyển sang màn hình tương ứng)
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Đã nhấn vào: $title')));
