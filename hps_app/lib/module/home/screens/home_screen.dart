@@ -4,6 +4,7 @@ import 'package:hps_app/module/booking/screens/booking_screen.dart';
 import 'package:hps_app/module/notification/screens/notification.dart';
 import 'package:hps_app/module/options/screens/options.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,6 +27,20 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   int activeIndex = 0;
+  String username = '...';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  Future<void> _loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username') ?? 'Khách';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 children: [
                   TextSpan(
-                    text: "Nghĩa Lê",
+                    text: username,
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -114,7 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-
             const SizedBox(height: 8),
             Center(
               child: AnimatedSmoothIndicator(
@@ -127,9 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
             const SizedBox(height: 16),
-
             const Text(
               "Dịch vụ",
               style: TextStyle(
@@ -169,8 +181,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: 20),
-
-            // Trending Hair Styles
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -195,7 +205,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-
             SizedBox(
               height: 160,
               child: ListView.builder(

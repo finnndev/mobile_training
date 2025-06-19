@@ -2,9 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/module/login/screens/login_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class OptionsScreen extends StatelessWidget {
+class OptionsScreen extends StatefulWidget {
   const OptionsScreen({super.key});
+
+  @override
+  State<OptionsScreen> createState() => _OptionsScreenState();
+}
+
+class _OptionsScreenState extends State<OptionsScreen> {
+  String _username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  Future<void> _loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _username = prefs.getString('username') ?? '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +35,7 @@ class OptionsScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: ColorsConstants.secondsBackground,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Tùy chọn',
           style: TextStyle(
             color: Colors.white,
@@ -27,7 +48,7 @@ class OptionsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.close, color: Colors.white),
             onPressed: () {
-              Navigator.pop(context); 
+              Navigator.pop(context);
             },
           ),
         ],
@@ -38,24 +59,22 @@ class OptionsScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  backgroundImage: const AssetImage(
-                    'assets/images/NghiaLe.png',
-                  ),
+                const CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/NghiaLe.png'),
                 ),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nghĩa Lê',
-                      style: TextStyle(
+                      _username.isNotEmpty ? _username : '---',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Thành viên mới',
                       style: TextStyle(
                         color: Colors.white,
@@ -71,37 +90,37 @@ class OptionsScreen extends StatelessWidget {
             const Divider(color: Color(0xff677D75)),
             Expanded(
               child: ListView(
-                children: [
+                children: const [
                   OptionItem(
                     icon: 'assets/svgs/settings.svg',
                     title: 'Cài đặt',
                   ),
-                  const Divider(color: Color(0xff677D75)),
+                  Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/calendar.svg',
                     title: 'Lịch đặt của tôi',
                   ),
-                  const Divider(color: Color(0xff677D75)),
+                  Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/favorite.svg',
                     title: 'Ưa thích',
                   ),
-                  const Divider(color: Color(0xff677D75)),
+                  Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/help.svg',
                     title: 'Trung tâm trợ giúp',
                   ),
-                  const Divider(color: Color(0xff677D75)),
+                  Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/policy.svg',
                     title: 'Chính sách và điều khoản',
                   ),
-                  const Divider(color: Color(0xff677D75)),
+                  Divider(color: Color(0xff677D75)),
                   OptionItem(
                     icon: 'assets/svgs/info.svg',
                     title: 'Về Tran Manh Hair Passion Studio',
                   ),
-                  const Divider(color: Color(0xff677D75)),
+                  Divider(color: Color(0xff677D75)),
                 ],
               ),
             ),
@@ -110,9 +129,13 @@ class OptionsScreen extends StatelessWidget {
               height: 56,
               child: InkWell(
                 onTap: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool('isLoggedIn', false);
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
                     (Route<dynamic> route) => false,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -126,13 +149,10 @@ class OptionsScreen extends StatelessWidget {
                     color: ColorsConstants.yellowPrimary,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.logout,
-                        color: Colors.black,
-                      ), 
+                    children: [
+                      Icon(Icons.logout, color: Colors.black),
                       SizedBox(width: 8),
                       Text(
                         'Đăng xuất',
