@@ -3,6 +3,7 @@ import 'package:hps_app/module/home/screens/home_screen.dart';
 import 'package:hps_app/module/register/screens/register.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:hps_app/shared/constants/mock_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -100,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   String fullName = _fullNameController.text.trim();
                   String password = _passwordController.text.trim();
                   List<Map<String, String>> users = await MockData.getUsers();
+
                   bool isValid = users.any(
                     (user) =>
                         user['fullName'] == fullName &&
@@ -107,6 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
 
                   if (isValid) {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setString('username', fullName);
+
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -124,8 +129,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
                   }
+
                   setState(() => _isLoading = false);
                 },
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

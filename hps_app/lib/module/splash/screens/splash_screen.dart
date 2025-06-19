@@ -1,7 +1,8 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hps_app/module/register/screens/register.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,16 +12,26 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool _showButton = false; 
+  bool _showButton = false;
 
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 5), () {
       setState(() {
         _showButton = true;
       });
     });
+  }
+
+  Future<void> _handleGetStarted() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isFirstLaunch', false); 
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const RegisterScreen()),
+    );
   }
 
   @override
@@ -30,10 +41,9 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Spacer(),
+          const Spacer(),
           Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
                   'assets/images/img_logo.png',
@@ -41,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   height: 120,
                   fit: BoxFit.cover,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   "Tran Manh",
                   style: TextStyle(
@@ -62,33 +72,24 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
           ),
-          Spacer(),
-
+          const Spacer(),
           AnimatedOpacity(
             opacity: _showButton ? 1.0 : 0.0,
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             child:
                 _showButton
-                    ? Container(
+                    ? SizedBox(
                       width: 361,
                       height: 56,
-
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFFFB347),
+                          backgroundColor: const Color(0xFFFFB347),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegisterScreen(),
-                            ),
-                          );
-                        },
-                        child: Text(
+                        onPressed: _handleGetStarted,
+                        child: const Text(
                           " Bắt đầu ",
                           style: TextStyle(
                             color: Color(0xFF1A3C30),
@@ -99,9 +100,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         ),
                       ),
                     )
-                    : SizedBox(),
+                    : const SizedBox(),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
         ],
       ),
     );
