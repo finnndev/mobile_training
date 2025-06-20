@@ -4,7 +4,7 @@ import 'package:hps_app/module/bookingSchedule/screens/bookingSchedule_screen.da
 import 'package:hps_app/module/home/screens/home_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
-class Qr_Payment_Screen extends StatelessWidget {
+class QrPaymentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import 'package:hps_app/shared/utils/format.dart';
+import '../services/hairdressing_service.dart';
+import '../models/service_model.dart';
 
-
-class ServiceScreen extends StatefulWidget {
+class HaidressingScreen extends StatefulWidget {
   final DateTime? selectedDate;
   final String selectedTime;
   final String selectedStylist;
   final Function(List<ServiceItem>) onServicesChanged;
 
-  const ServiceScreen({
+  const HaidressingScreen({
     super.key,
     required this.selectedDate,
     required this.selectedTime,
@@ -18,35 +20,52 @@ class ServiceScreen extends StatefulWidget {
   });
 
   @override
-  _ServiceScreenState createState() => _ServiceScreenState();
+  _HaidressingScreenState createState() => _HaidressingScreenState();
 }
 
-
-class _ServiceScreenState extends State<ServiceScreen> {
+class _HaidressingScreenState extends State<HaidressingScreen> {
   final List<ServiceItem> services = [
-    ServiceItem(iconPath: 'assets/svgs/curling.svg', label: "Uốn tóc"),
-    ServiceItem(iconPath: 'assets/svgs/dying.svg', label: "Nhuộm tóc"),
-    ServiceItem(iconPath: 'assets/svgs/paintbrush.svg', label: "Ép tóc"),
-    ServiceItem(iconPath: 'assets/svgs/washing.svg', label: "Gội đầu"),
-    ServiceItem(iconPath: 'assets/svgs/color.svg', label: "Tạo màu"),
+    ServiceItem(iconPath: 'assets/svgs/cut.svg', label: "Cắt tóc", price: 150000),
+    ServiceItem(iconPath: 'assets/svgs/curling.svg', label: "Uốn tóc", price: 300000),
+    ServiceItem(iconPath: 'assets/svgs/dying.svg', label: "Nhuộm tóc", price: 400000),
+    ServiceItem(iconPath: 'assets/svgs/paintbrush.svg', label: "Ép tóc", price: 250000),
+    ServiceItem(iconPath: 'assets/svgs/washing.svg', label: "Gội đầu", price: 100000),
+    ServiceItem(iconPath: 'assets/svgs/color.svg', label: "Tạo màu", price: 200000),
   ];
 
-  final List<ServiceItem> selectedServices = [];
+  List<ServiceItem> selectedServices = [];
 
- 
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedServices();
+  }
+
+  Future<void> _saveSelectedServices() async {
+    await HairdressingService.saveSelectedServices(selectedServices);
+  }
+
+  Future<void> _loadSelectedServices() async {
+    final services = await HairdressingService.getSelectedServices();
+    setState(() {
+      selectedServices = services ?? [];
+      widget.onServicesChanged(selectedServices); 
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Text(
-            "Dịch vụ khác",
+            "Thêm dịch vụ",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: ColorsConstants.text, 
+              color: ColorsConstants.text,
               fontFamily: "Roboto",
             ),
           ),
@@ -66,7 +85,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
                     } else {
                       selectedServices.add(service);
                     }
-                    widget.onServicesChanged(selectedServices);
+                    widget.onServicesChanged(selectedServices); 
+                    _saveSelectedServices(); // Lưu trạng thái ngay lập tức
                   });
                 },
                 child: _buildServiceCard(service, isSelected),
@@ -78,7 +98,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
     );
   }
 
-  
   Widget _buildServiceCard(ServiceItem service, bool isSelected) {
     return Card(
       color: isSelected ? ColorsConstants.secondsBackground : ColorsConstants.gray,
@@ -91,8 +110,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
       ),
       margin: EdgeInsets.zero,
       child: SizedBox(
-        width: 111,
-        height: 80,
+        width: 110,
+        height: 100,
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -109,14 +128,28 @@ class _ServiceScreenState extends State<ServiceScreen> {
               ),
               const SizedBox(height: 6),
               if (service.label.isNotEmpty)
-                Text(
-                  service.label,
-                  style: TextStyle(
-                    color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.text,
-                    fontSize: 14,
-                    fontFamily: "Roboto",
-                  ),
-                  textAlign: TextAlign.center,
+                Column(
+                  children: [
+                    Text(
+                      service.label,
+                      style: TextStyle(
+                        color: ColorsConstants.text, 
+                        fontSize: 14,
+                        fontFamily: "Roboto",
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      formatCurrency(service.price) + ' VND',
+                      style: TextStyle(
+                        color: ColorsConstants.yellowPrimary,
+                        fontSize: 12,
+                        fontFamily: "Roboto",
+               
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
             ],
           ),
@@ -124,23 +157,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
       ),
     );
   }
-}
 
-
-class ServiceItem {
-  final String iconPath;
-  final String label;
-
-  ServiceItem({required this.iconPath, required this.label});
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ServiceItem &&
-          runtimeType == other.runtimeType &&
-          iconPath == other.iconPath &&
-          label == other.label;
-
-  @override
-  int get hashCode => iconPath.hashCode ^ label.hashCode;
+  
 }

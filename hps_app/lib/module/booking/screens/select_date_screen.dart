@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../services/date_time_service.dart';
+import '../models/date_time_model.dart';
 
 class SelectDateScreen extends StatefulWidget {
   final String creatorName;
@@ -19,19 +21,29 @@ class SelectDateScreen extends StatefulWidget {
   _SelectDateScreenState createState() => _SelectDateScreenState();
 }
 
-
 class _SelectDateScreenState extends State<SelectDateScreen> {
-  int? selectedDate;
-  String? selectedTime;
-  int currentMonth = DateTime.now().month; 
-  int currentYear = DateTime.now().year;  
+  DateTime? _selectedDay;
+  String? _selectedTime;
   final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  final List<String> timeSlots = ["08:00", "08:30", "09:00", "09:30", "10:00"];
 
-  final List<String> timeSlots = ["08:00", "08:30", "09:00","09:30","10:00"]; 
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedDateTime();
+  }
 
-  
+  Future<void> _loadSelectedDateTime() async {
+    final dateTime = await DateTimeService.getSelectedDateTime();
+    setState(() {
+      _selectedDay = dateTime?.selectedDate;
+      _selectedTime = dateTime?.selectedTime;
+      if (_selectedDay != null) widget.onDateSelected(_selectedDay!); // Cập nhật callback
+      if (_selectedTime != null) widget.onTimeSelected(_selectedTime!); // Cập nhật callback
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -39,9 +51,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 15),
-
-          
+          const SizedBox(height: 15),
           Text(
             "Chọn ngày",
             style: TextStyle(
@@ -51,14 +61,9 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
               color: ColorsConstants.text,
             ),
           ),
-          SizedBox(height: 10),
-
-        
+          const SizedBox(height: 10),
           _buildCalendar(),
-
-          SizedBox(height: 20),
-
-         
+          const SizedBox(height: 20),
           Text(
             "Chọn khung giờ",
             style: TextStyle(
@@ -68,40 +73,40 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
               color: ColorsConstants.text,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           _buildTimeSelector(),
         ],
       ),
     );
   }
 
-  
   Widget _buildCalendar() {
     return Container(
       decoration: BoxDecoration(
         color: ColorsConstants.gray,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: ColorsConstants.grayLight, 
+          color: ColorsConstants.grayLight,
           width: 1.5,
         ),
       ),
       child: TableCalendar(
-        firstDay: DateTime(currentYear - 1, currentMonth, 1),
-        lastDay: DateTime(currentYear + 1, currentMonth, 31),
+        firstDay: DateTime(DateTime.now().year - 1, DateTime.now().month, 1),
+        lastDay: DateTime(DateTime.now().year + 1, DateTime.now().month, 31),
         focusedDay: _focusedDay,
         calendarFormat: _calendarFormat,
         selectedDayPredicate: (day) {
           return isSameDay(_selectedDay, day);
         },
         enabledDayPredicate: (day) {
-          return !day.isBefore(DateTime.now().subtract(Duration(days: 1)));
+          return !day.isBefore(DateTime.now().subtract(const Duration(days: 1)));
         },
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
             _selectedDay = selectedDay;
-            _focusedDay = focusedDay; 
+            _focusedDay = focusedDay;
             widget.onDateSelected(selectedDay); 
+            _saveSelectedDateTime(); // Lưu trạng thái ngay lập tức
           });
         },
         onPageChanged: (focusedDay) {
@@ -110,10 +115,10 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
         headerStyle: HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,
-          titleTextStyle: TextStyle(
+          titleTextStyle: const TextStyle(
             color: ColorsConstants.text,
             fontSize: 16,
-            fontWeight: FontWeight.bold, 
+            fontWeight: FontWeight.bold,
           ),
           leftChevronIcon: SvgPicture.asset(
             'assets/svgs/left.svg',
@@ -127,7 +132,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
           ),
         ),
         calendarStyle: CalendarStyle(
-          todayDecoration: BoxDecoration(
+          todayDecoration: const BoxDecoration(
             color: Colors.transparent,
             shape: BoxShape.circle,
           ),
@@ -136,23 +141,22 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
             color: Colors.transparent,
             shape: BoxShape.circle,
           ),
-          defaultTextStyle: TextStyle(color: Colors.white),
-          weekendTextStyle: TextStyle(color: Colors.white),
-          holidayTextStyle: TextStyle(color: Colors.red),
-          selectedTextStyle: TextStyle(color: ColorsConstants.yellowPrimary, fontWeight: FontWeight.bold),
-          todayTextStyle: TextStyle(color: Colors.white, ),
-          outsideTextStyle: TextStyle(color: ColorsConstants.grayLight),
-          cellMargin: EdgeInsets.all(6), 
-        
+          defaultTextStyle: const TextStyle(color: Colors.white),
+          weekendTextStyle: const TextStyle(color: Colors.white),
+          holidayTextStyle: const TextStyle(color: Colors.red),
+          selectedTextStyle: const TextStyle(
+              color: ColorsConstants.yellowPrimary, fontWeight: FontWeight.bold),
+          todayTextStyle: const TextStyle(color: Colors.white),
+          outsideTextStyle: const TextStyle(color: ColorsConstants.grayLight),
+          cellMargin: const EdgeInsets.all(6),
         ),
-        daysOfWeekStyle: DaysOfWeekStyle(
+        daysOfWeekStyle: const DaysOfWeekStyle(
           weekdayStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           weekendStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
-
 
   Widget _buildTimeSelector() {
     return SizedBox(
@@ -161,18 +165,19 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: timeSlots.length,
         itemBuilder: (context, index) {
-          bool isSelected = selectedTime == timeSlots[index];
+          final isSelected = _selectedTime == timeSlots[index];
 
           return GestureDetector(
             onTap: () {
               setState(() {
-                selectedTime = timeSlots[index];
-                widget.onTimeSelected(timeSlots[index]);
+                _selectedTime = timeSlots[index];
+                widget.onTimeSelected(timeSlots[index]); 
+                _saveSelectedDateTime(); // Lưu trạng thái ngay lập tức
               });
             },
             child: Card(
               color: isSelected ? ColorsConstants.secondsBackground : ColorsConstants.gray,
-              margin: EdgeInsets.symmetric(horizontal: 6),
+              margin: const EdgeInsets.symmetric(horizontal: 6),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
                 side: BorderSide(
@@ -181,7 +186,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: SizedBox(
                   height: 48,
                   width: 104,
@@ -204,5 +209,11 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
     );
   }
 
-  
+  Future<void> _saveSelectedDateTime() async {
+    final dateTime = DateTimeSelection(
+      selectedDate: _selectedDay,
+      selectedTime: _selectedTime,
+    );
+    await DateTimeService.saveSelectedDateTime(dateTime);
+  }
 }
