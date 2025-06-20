@@ -11,54 +11,12 @@ class QrScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:  ColorsConstants.secondsBackground,
-      appBar: AppBar(
-        backgroundColor: ColorsConstants.secondsBackground,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text(
-          'Đặt lịch cắt tóc',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        centerTitle: true,
-      ),
+     
       body: Column(
         children: [
-          const SizedBox(height: 24),
+         
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(5, (index) {
-                final isCurrentStep = index == 4;
-                return Expanded(
-                  child: Container(
-                    height: 2,
-                    width: 10,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      color:
-                          isCurrentStep
-                              ? ColorsConstants.yellowPrimary
-                              : ColorsConstants.yellowPrimary,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
-
-          const SizedBox(height: 32),
+          
 
           Expanded(
             child: SingleChildScrollView(
@@ -218,7 +176,7 @@ class QrScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Qr_Payment_Screen()),
+                  MaterialPageRoute(builder: (context) => QrPaymentScreen()),
                 );
                 ScaffoldMessenger.of(
                   context,

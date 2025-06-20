@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import '../services/stylist_service.dart'; // Để xóa dữ liệu
+import '../services/date_time_service.dart';
+import '../services/hairdressing_service.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onBack;
   final VoidCallback? onNext;
   final bool isItemSelected;
+  final bool showCancelDialog;
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     this.onBack,
     this.onNext,
     this.isItemSelected = false,
-  }) : super(key: key);
+    this.showCancelDialog = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       centerTitle: true,
       title: Text(
-        "Đặt lịch cắt tóc",
+        "Đặt lịch làm tóc",
         style: TextStyle(
           color: ColorsConstants.text,
           fontSize: 16,
@@ -31,7 +36,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       leading: IconButton(
         icon: SvgPicture.asset('assets/svgs/left.svg', width: 24, height: 24),
-        onPressed: onBack,
+        onPressed: () async {
+          if (onBack != null) {
+            if (showCancelDialog) {
+              _showCancelConfirmation(context);
+            } else {
+              onBack!();
+            }
+          }
+        },
       ),
       actions: [
         IconButton(
@@ -44,6 +57,35 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: onNext,
         ),
       ],
+    );
+  }
+
+  void _showCancelConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Xác nhận hủy"),
+        content: const Text("Bạn có muốn hủy các lựa chọn hiện tại không?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Không"),
+          ),
+          TextButton(
+            onPressed: () async {
+              
+              await StylistService.clearSelectedStylist();
+              await DateTimeService.clearSelectedDateTime();
+              await HairdressingService.clearSelectedServices();
+              if (onBack != null) onBack!();
+              Navigator.pop(context);
+            },
+            child: const Text("Có"),
+          ),
+        ],
+      ),
     );
   }
 

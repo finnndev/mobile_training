@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import 'package:hps_app/shared/utils/format.dart';
 
 
-class CustomButton extends StatelessWidget {
+class CustomButton extends StatefulWidget {
   final String creatorName;
   final VoidCallback onPressed;
-  final String text; 
+  final String text;
   final DateTime? selectedDate;
   final String selectedTime;
   final List<String> selectedServices;
   final int currentStep;
+  final double? totalPrice;
 
   const CustomButton({
     super.key,
@@ -20,15 +22,23 @@ class CustomButton extends StatelessWidget {
     required this.selectedTime,
     required this.selectedServices,
     required this.currentStep,
+    this.totalPrice,
   });
 
+  @override
+  State<CustomButton> createState() => _CustomButtonState();
+}
+
+class _CustomButtonState extends State<CustomButton> {
   bool get _isEnabled {
-    switch (currentStep) {
+    switch (widget.currentStep) {
       case 0:
-        return creatorName.isNotEmpty;
+        return widget.creatorName.isNotEmpty;
       case 1:
-        return selectedDate != null && selectedTime.isNotEmpty;
+        return widget.selectedDate != null && widget.selectedTime.isNotEmpty;
       case 2:
+        return widget.selectedServices.isNotEmpty;
+      case 3:
         return true;
       default:
         return false;
@@ -47,61 +57,114 @@ class CustomButton extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          creatorName.isNotEmpty
-              ? Row(
+          
+          if (widget.currentStep == 3 && widget.totalPrice != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2,top : 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Tổng thanh toán:',
+                    style: TextStyle(
+                      color: ColorsConstants.text,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    formatCurrency(widget.totalPrice!) + ' VND',
+                    style: TextStyle(
+                      color: ColorsConstants.yellowPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]
+          else ...[
+            widget.creatorName.isNotEmpty
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.creatorName,
+                        style: TextStyle(
+                          color: ColorsConstants.yellowPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Roboto",
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _buildServiceLabel(),
+                          style: TextStyle(
+                            color: ColorsConstants.yellowPrimary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: "Roboto",
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox.shrink(),
+
+            if (widget.selectedDate != null && widget.selectedTime.isNotEmpty) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _formatFullDate(widget.selectedDate!),
+                    style: TextStyle(
+                      color: ColorsConstants.yellowPrimary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    widget.selectedTime,
+                    style: TextStyle(
+                      color: ColorsConstants.yellowPrimary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            if (widget.totalPrice != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 4),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      creatorName,
+                      'Tổng thanh toán:',
                       style: TextStyle(
-                        color: ColorsConstants.yellowPrimary,
-                        fontSize: 16,
+                        color: ColorsConstants.text,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        fontFamily: "Roboto",
                       ),
                     ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _buildServiceLabel(),
-                        style: TextStyle(
-                          color: ColorsConstants.yellowPrimary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: "Roboto",
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.right,
+                    Text(
+                      formatCurrency(widget.totalPrice!) + ' VND',
+                      style: TextStyle(
+                        color: ColorsConstants.yellowPrimary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
-                )
-              : SizedBox.shrink(),
-
-       
-          if (selectedDate != null && selectedTime.isNotEmpty) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _formatFullDate(selectedDate!),
-                  style: TextStyle(
-                    color: ColorsConstants.yellowPrimary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
                 ),
-                Text(
-                  selectedTime,
-                  style: TextStyle(
-                    color: ColorsConstants.yellowPrimary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
+              ),
           ],
           Container(
             width: double.infinity,
@@ -118,7 +181,7 @@ class CustomButton extends StatelessWidget {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: _isEnabled ? onPressed : null,
+                onPressed: _isEnabled ? widget.onPressed : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _isEnabled
                       ? ColorsConstants.yellowPrimary
@@ -131,7 +194,7 @@ class CustomButton extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 12),
                 ),
                 child: Text(
-                  text, 
+                  widget.text,
                   style: TextStyle(
                     color: ColorsConstants.backgroundColor,
                     fontSize: 16,
@@ -168,7 +231,6 @@ class CustomButton extends StatelessWidget {
   }
 
   String _buildServiceLabel() {
-    if (selectedServices.isEmpty) return "Cắt tóc";
-    return "Cắt tóc, ${selectedServices.join(', ')}";
+    return widget.selectedServices.join(', ');
   }
 }

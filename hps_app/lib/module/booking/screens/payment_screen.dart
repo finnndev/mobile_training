@@ -1,8 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import 'package:hps_app/shared/utils/format.dart';
 
-class BookingpaymentScreen extends StatelessWidget {
-  const BookingpaymentScreen({super.key});
+class PaymentScreen extends StatefulWidget {
+  final double totalPrice;
+  final String selectedCreator;
+  final DateTime? selectedDate;
+  final String selectedTime;
+  final List<String> selectedServices;
+
+  const PaymentScreen({
+    super.key,
+    required this.totalPrice,
+    required this.selectedCreator,
+    required this.selectedDate,
+    required this.selectedTime,
+    required this.selectedServices,
+  });
+
+  @override
+  State<PaymentScreen> createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends State<PaymentScreen> {
+  int _selectedPaymentIndex = 0;
+  int _selectedEWalletIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -15,230 +38,226 @@ class BookingpaymentScreen extends StatelessWidget {
         title: const Text(
           'Thông tin đặt lịch',
           style: TextStyle(
-            color: Colors.white,
+            color: ColorsConstants.text,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildBookingInfoCard(),
+                      const SizedBox(height: 24),
+                      const Text(
+                        "Chọn phương thức thanh toán",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: ColorsConstants.text,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      _buildPaymentMethodSelector(),
+                      const SizedBox(height: 6),
+                      if (_selectedPaymentIndex == 1) ...[
+                        const Text(
+                          "Chọn loại ví điện tử",
+                          style: TextStyle(
+                            color: ColorsConstants.text,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                          ),
+                        ),
+                        _buildEWalletSelector(),
+                        const SizedBox(height: 24),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+           
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBookingInfoCard() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: ColorsConstants.gray,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _InfoRow(
+            label: 'Nhà tạo mẫu:',
+            value: widget.selectedCreator,
+          ),
+          const Divider(color: ColorsConstants.mistGreen),
+          _InfoRow(
+            label: 'Thời gian:',
+            value: '${widget.selectedTime}, ${_formatFullDate(widget.selectedDate!)}',
+          ),
+          const Divider(color: ColorsConstants.mistGreen),
+       
+          
+          ...widget.selectedServices.map((service) {
+            final price = _getServicePrice(service);
+            return _InfoRow(
+              label: service,
+              value: formatCurrency(price) + ' VND',
+            );
+          }).toList(),
+          const Divider(color: ColorsConstants.mistGreen),
+          const _InfoRow(label: 'Dùng mã giảm giá', value: '0'), 
+          const Divider(color: ColorsConstants.mistGreen),
+          _InfoRow(
+            label: 'Tổng thanh toán',
+            value: formatCurrency(widget.totalPrice) + ' VND',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethodSelector() {
+    final paymentMethods = [
+      {
+        'label': 'Thanh toán tại salon',
+        'image': 'assets/images/ic_wallet.png',
+      },
+      {
+        'label': 'Ví điện tử',
+        'image': 'assets/icons/ic_wallet_cards.png',
+      },
+    ];
+    return Column(
+      children: List.generate(paymentMethods.length, (index) {
+        final method = paymentMethods[index];
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              _selectedPaymentIndex = index;
+            });
+          },
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: _selectedPaymentIndex == index
+                  ? ColorsConstants.darkLeafGreen
+                  : ColorsConstants.gray,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _selectedPaymentIndex == index
+                    ? ColorsConstants.yellowPrimary
+                    : ColorsConstants.mistGreen,
+                width: 1.5,
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
-                _buildBookingInfoCard(),
-                const SizedBox(height: 24),
-                const Text(
-                  "Chọn phương thức thanh toán",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                if (method['image'] != null)
+                  Image.asset(
+                    method['image']!,
+                    height: 24,
+                    width: 24,
+                    color: _selectedPaymentIndex == index
+                        ? ColorsConstants.yellowPrimary
+                        : null,
                   ),
-                ),
-                const SizedBox(height: 12),
-                _buildPaymentMethodSelector(),
-                SizedBox(height: 6),
+                const SizedBox(width: 8),
                 Text(
-                  "Chọn loại ví điện tử",
+                  method['label']!,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: _selectedPaymentIndex == index
+                        ? ColorsConstants.yellowPrimary
+                        : ColorsConstants.text,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    fontSize: 14,
                   ),
                 ),
-                _buildEWalletSelector(),
-                const SizedBox(height: 24),
               ],
             ),
           ),
-        ),
-      ),
-      // bottomNavigationBar: _buildBottomBar(context),
+        );
+      }),
     );
   }
-}
 
-Widget _buildBookingInfoCard() {
-  return Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: ColorsConstants.gray,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        _InfoRow(label: 'Nhà tạo mẫu:', value: 'Tran Manh'),
-        Divider(color: ColorsConstants.mistGreen),
-        _InfoRow(label: 'Thời gian:', value: '08:30,Thứ Bảy,17 Tháng 12, 2022'),
-        Divider(color: ColorsConstants.mistGreen),
-
-        SizedBox(height: 8),
-        Text(
-          'Dịch vụ:',
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 12, top: 4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('- Cắt tóc', style: TextStyle(color: Colors.white70)),
-                  Text('150.000 VND', style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('- Gội đầu', style: TextStyle(color: Colors.white70)),
-                  Text('100.000 VND', style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 8),
-        Divider(color: ColorsConstants.mistGreen),
-
-        _InfoRow(label: 'Dùng mã giảm giá', value: '0'),
-        Divider(color: ColorsConstants.mistGreen),
-        _InfoRow(value: '250.000 VND', label: 'Tổng thanh toán'),
-      ],
-    ),
-  );
-}
-
-Widget _buildPaymentMethodSelector() {
-  return Row(
-    children: [
-      _PaymentOption(
-        label: 'Ví điện tử',
-        selected: true,
-        imageUrl: 'assets/icons/ic_wallet_cards.png',
+  Widget _buildEWalletSelector() {
+    final eWallets = [
+      {'label': 'Momo', 'image': 'assets/icons/ic_logo_momo.svg'},
+      {'label': 'VNPAY', 'image': 'assets/icons/ic_vnpay.svg'},
+      {'label': 'ZaloPay', 'image': 'assets/icons/ic_zalopay.svg'},
+    ];
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: ColorsConstants.darkLeafGreen,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: ColorsConstants.customBackground, width: 1.2),
       ),
-      _PaymentOption(
-        label: 'Thẻ tín dụng',
-        selected: false,
-        imageUrl: 'assets/icons/ic_credit_card.png',
-      ),
-      _PaymentOption(
-        imageUrl: 'assets/images/ic_wallet.png',
-        label: 'Thẻ ghi nợ',
-        selected: false,
-      ),
-    ],
-  );
-}
-
-Widget _buildEWalletSelector() {
-  return Container(
-    margin: const EdgeInsets.only(top: 8),
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: ColorsConstants.darkLeafGreen, 
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: ColorsConstants.yellowPrimary, width: 1.2),
-    ),
-    child: Row(
-      children: [
-        Image.asset('assets/icons/ic_logo_momo.png', width: 24, height: 24),
-        const SizedBox(width: 10),
-
-        const Text(
-          'Ví Momo',
-          style: TextStyle(
-            color: Colors.orange,
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-          ),
-        ),
-        const Spacer(),
-
-        // Radio selected
-        Container(
-          width: 18,
-          height: 18,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.orange, width: 2),
-          ),
-          child: Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(eWallets.length, (index) {
+          final wallet = eWallets[index];
+          final isSelected = _selectedEWalletIndex == index;
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedEWalletIndex = index;
+              });
+            },
             child: Container(
-              width: 8,
-              height: 8,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.orange,
+              width: 80,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 6),
+              decoration: BoxDecoration(
+                color: ColorsConstants.gray,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: isSelected ? ColorsConstants.yellowPrimary : Colors.transparent,
+                  width: 2,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    wallet['image']!,
+                    width: 32,
+                    height: 32,
+                    placeholderBuilder: (context) => const Icon(Icons.image, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    wallet['label']!,
+                    style: TextStyle(
+                      color: ColorsConstants.text,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-
-class _PaymentOption extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final String? imageUrl;
-
-  const _PaymentOption({
-    required this.label,
-    required this.selected,
-    this.imageUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        height: 130,
-        width: 110,
-        margin: const EdgeInsets.symmetric(horizontal: 6),
-        decoration: BoxDecoration(
-          color:
-              selected ? ColorsConstants.darkLeafGreen : ColorsConstants.gray,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: selected ? ColorsConstants.yellowPrimary : Color(0xFF677D75),
-            width: 1.5,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (imageUrl?.isNotEmpty ?? false)
-              Image.asset(
-                imageUrl ?? '',
-                fit: BoxFit.cover,
-                height: 24,
-                width: 24,
-                color: selected ? ColorsConstants.yellowPrimary : null,
-              ),
-
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: selected ? ColorsConstants.yellowPrimary : Colors.white,
-              ),
-            ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }
@@ -260,7 +279,7 @@ class _InfoRow extends StatelessWidget {
             child: Text(
               label,
               style: const TextStyle(
-                color: Colors.white,
+                color: ColorsConstants.text,
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
               ),
@@ -269,7 +288,7 @@ class _InfoRow extends StatelessWidget {
           Text(
             value,
             style: const TextStyle(
-              color: Colors.white,
+              color: ColorsConstants.yellowPrimary,
               fontSize: 12,
               fontWeight: FontWeight.w400,
             ),
@@ -278,4 +297,33 @@ class _InfoRow extends StatelessWidget {
       ),
     );
   }
+}
+
+String _formatFullDate(DateTime date) {
+  const weekdays = {
+    1: 'Thứ Hai',
+    2: 'Thứ Ba',
+    3: 'Thứ Tư',
+    4: 'Thứ Năm',
+    5: 'Thứ Sáu',
+    6: 'Thứ Bảy',
+    7: 'Chủ Nhật',
+  };
+  final weekday = weekdays[date.weekday] ?? '';
+  final month = date.month.toString().padLeft(2, '0');
+  final year = date.year;
+  return "$weekday, ${date.day} tháng $month năm $year";
+}
+
+
+double _getServicePrice(String serviceLabel) {
+  const prices = {
+    'Cắt tóc': 150000,
+    'Gội đầu': 100000,
+    'Uốn tóc': 300000,
+    'Nhuộm tóc': 400000,
+    'Ép tóc': 250000,
+    'Tạo màu': 200000,
+  };
+  return (prices[serviceLabel] ?? 0.0).toDouble();
 }
