@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         }
         Log.d(TAG, "onCreate called ${this.hashCode()}")
         Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show()
-        i = savedInstanceState?.getInt("KEY_I") ?: 0
         activityExample()
         backgroundServiceExample()
         foregroundServiceExample()
@@ -69,6 +68,8 @@ class MainActivity : AppCompatActivity() {
         boundServiceExample()
         intentDemo()
         intentFilterDemo()
+        i = savedInstanceState?.getInt("KEY_I") ?: 0
+        findViewById<TextView>(R.id.textView).text = i.toString()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
