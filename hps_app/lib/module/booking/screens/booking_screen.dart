@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hps_app/module/qr/screens/qr_screen.dart';
 import 'package:hps_app/module/success/screens/success_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../shared/constants/colors.dart';
 import 'payment_screen.dart';
 import '../widgets/app_bar.dart';
@@ -31,6 +32,7 @@ class _BookingScreenState extends State<BookingScreen> {
   DateTime? selectedDate;
   String selectedTime = "";
   List<ServiceItem> _selectedServices = [];
+  String? username ;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -135,9 +137,31 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   void initState() {
     super.initState();
+    _clearBookingData();
     _loadSelectedCreator();
     _loadSelectedDateTime();
     _loadSelectedServices();
+    _loadUsername();
+  }
+
+  Future<void> _clearBookingData() async {
+    await StylistService.clearSelectedStylist();
+    await DateTimeService.clearSelectedDateTime();
+    await HairdressingService.clearSelectedServices();
+    setState(() {
+      selectedCreator = "";
+      selectedDate = null;
+      selectedTime = "";
+      _selectedServices = [];
+      _selectedIndex = 0;
+    });
+  }
+
+  Future<void> _loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username') ?? 'Khách';
+    });
   }
 
   Future<void> _loadSelectedCreator() async {
@@ -216,7 +240,9 @@ class _BookingScreenState extends State<BookingScreen> {
                     );
                   case 4:
                     return QrScreen(
-                    
+                      totalPrice: totalPrice,
+                      customerName: username ?? 'Khách',
+                      paymentTime: DateTime.now(),
                     );
                   case 5:
                     return SuccessScreen();
@@ -231,7 +257,7 @@ class _BookingScreenState extends State<BookingScreen> {
               },
             ),
           ),
-          if (_selectedIndex != 3 && _selectedIndex != 5)
+          if (_selectedIndex != 3 && _selectedIndex != 4)
             CustomButton(
               creatorName: selectedCreator,
               onPressed: _onContinuePressed,

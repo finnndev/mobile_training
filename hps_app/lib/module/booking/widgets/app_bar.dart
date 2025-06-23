@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/shared/constants/colors.dart';
-import '../services/stylist_service.dart'; // Để xóa dữ liệu
+import '../services/stylist_service.dart'; 
 import '../services/date_time_service.dart';
 import '../services/hairdressing_service.dart';
+import 'package:hps_app/module/home/screens/home_screen.dart'; // Import HomeScreen
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onBack;
@@ -75,12 +76,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           TextButton(
             onPressed: () async {
-              
               await StylistService.clearSelectedStylist();
               await DateTimeService.clearSelectedDateTime();
               await HairdressingService.clearSelectedServices();
-              if (onBack != null) onBack!();
               Navigator.pop(context);
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => HomeScreen()),
+                (route) => false,
+              );
             },
             child: const Text("Có"),
           ),

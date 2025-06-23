@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../booking/screens/booking_screen.dart';
 import '../../home/screens/home_screen.dart';
+import 'package:hps_app/shared/constants/colors.dart';
 
 class SuccessScreen extends StatelessWidget {
-  const                     SuccessScreen({super.key});
+  const SuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17362B),
+      backgroundColor: ColorsConstants.darkLeafGreen, 
       body: SafeArea(
         child: Column(
           children: [
-            // Phần giữa màn hình: Hộp thông báo
             Expanded(
               child: Center(
                 child: Padding(
@@ -22,7 +22,7 @@ class SuccessScreen extends StatelessWidget {
                     height: 163,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF345147),
+                      color: ColorsConstants.gray, 
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
@@ -35,12 +35,12 @@ class SuccessScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          "Thanh toán thành công!",
+                          "Đặt lịch thành công!",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             fontFamily: "Roboto",
-                            color: Color(0xFFF3AC40),
+                            color: ColorsConstants.yellowPrimary, 
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -52,7 +52,7 @@ class SuccessScreen extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                             height: 1.33,
                             fontFamily: "Roboto",
-                            color: Colors.white,
+                            color: ColorsConstants.text,
                           ),
                         ),
                       ],
@@ -72,7 +72,7 @@ class SuccessScreen extends StatelessWidget {
                     height: 56,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF3AC40),
+                        backgroundColor: ColorsConstants.yellowPrimary, // Thay #F3AC40 bằng ColorsConstants.yellowPrimary
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -85,10 +85,10 @@ class SuccessScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         "Đến mục Lịch đặt của tôi",
                         style: TextStyle(
-                          color: Color(0xFF1A3C30),
+                          color: ColorsConstants.backgroundColor, 
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                           fontFamily: "Roboto",
@@ -108,10 +108,9 @@ class SuccessScreen extends StatelessWidget {
                       "Về trang chủ",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFFF3AC40),
+                        color: ColorsConstants.yellowPrimary, 
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-
                         fontFamily: "Roboto",
                       ),
                     ),
@@ -119,7 +118,7 @@ class SuccessScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 34),
+           
           ],
         ),
       ),
