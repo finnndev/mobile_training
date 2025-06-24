@@ -12,6 +12,7 @@ class CustomButton extends StatefulWidget {
   final List<String> selectedServices;
   final int currentStep;
   final double? totalPrice;
+  final int? selectedPaymentIndex;
 
   const CustomButton({
     super.key,
@@ -23,6 +24,7 @@ class CustomButton extends StatefulWidget {
     required this.selectedServices,
     required this.currentStep,
     this.totalPrice,
+    this.selectedPaymentIndex,
   });
 
   @override

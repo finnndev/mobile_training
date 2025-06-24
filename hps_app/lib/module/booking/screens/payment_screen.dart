@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:hps_app/shared/utils/format.dart';
+import 'package:hps_app/module/success/screens/success_screen.dart';
+import 'package:hps_app/module/qr/screens/qr_screen.dart';
+import '../widgets/custom_button.dart';
 
 class PaymentScreen extends StatefulWidget {
   final double totalPrice;
@@ -84,7 +87,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
               ),
             ),
-           
+            
           ],
         ),
       ),
@@ -108,7 +111,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           const Divider(color: ColorsConstants.mistGreen),
           _InfoRow(
             label: 'Thời gian:',
-            value: '${widget.selectedTime}, ${_formatFullDate(widget.selectedDate!)}',
+            value: '${widget.selectedTime}, ${formatFullDate(widget.selectedDate!)}',
           ),
           const Divider(color: ColorsConstants.mistGreen),
        
@@ -298,23 +301,6 @@ class _InfoRow extends StatelessWidget {
     );
   }
 }
-
-String _formatFullDate(DateTime date) {
-  const weekdays = {
-    1: 'Thứ Hai',
-    2: 'Thứ Ba',
-    3: 'Thứ Tư',
-    4: 'Thứ Năm',
-    5: 'Thứ Sáu',
-    6: 'Thứ Bảy',
-    7: 'Chủ Nhật',
-  };
-  final weekday = weekdays[date.weekday] ?? '';
-  final month = date.month.toString().padLeft(2, '0');
-  final year = date.year;
-  return "$weekday, ${date.day} tháng $month năm $year";
-}
-
 
 double _getServicePrice(String serviceLabel) {
   const prices = {
