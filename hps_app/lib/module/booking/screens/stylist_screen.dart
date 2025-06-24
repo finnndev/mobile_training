@@ -3,6 +3,12 @@ import 'package:hps_app/module/booking/models/stylist_model.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import '../services/stylist_service.dart';
 
+final List<Map<String, String>> kCreators = [
+  {"name": "Tran Manh", "image": "assets/images/stylist.jpg"},
+  {"name": "Jun Won", "image": "assets/images/stylist2.jpg"},
+  {"name": "Woo Your", "image": "assets/images/stylist3.jpg"},
+];
+
 class StylistSelector extends StatefulWidget {
   final Function(String) onCreatorSelected;
 
@@ -15,17 +21,11 @@ class StylistSelector extends StatefulWidget {
 class _StylistSelectorState extends State<StylistSelector> {
   String selectedCreator = "";
 
-  final List<Map<String, String>> creators = [
-    {"name": "Tran Manh", "image": "assets/images/stylist.jpg"},
-    {"name": "Jun Won", "image": "assets/images/stylist2.jpg"},
-    {"name": "Woo Your", "image": "assets/images/stylist3.jpg"},
-  ];
-
-  static const double _cardWidth = 127.0;
-  static const double _cardHeight = 162.0;
-  static const double _imageSize = 95.0;
-  static const double _horizontalMargin = 8.0;
-  static const double _verticalPadding = 8.0;
+  final double _cardWidth = 127.0;
+  final double _cardHeight = 162.0;
+  final double _imageSize = 95.0;
+  final double _horizontalMargin = 8.0;
+  final double _verticalPadding = 8.0;
 
   @override
   void initState() {
@@ -74,9 +74,9 @@ class _StylistSelectorState extends State<StylistSelector> {
           height: _cardHeight,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: creators.length,
+            itemCount: kCreators.length,
             itemBuilder: (context, index) {
-              return _buildCreatorItem(creators[index]);
+              return _buildCreatorItem(kCreators[index]);
             },
           ),
         ),

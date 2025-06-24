@@ -93,9 +93,6 @@ class _BookingScreenState extends State<BookingScreen> {
 
       case 2:
         if (_selectedServices.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Vui lòng chọn ít nhất một dịch vụ!')),
-          );
           return;
         }
         setState(() => _selectedIndex = 3);
@@ -134,14 +131,27 @@ class _BookingScreenState extends State<BookingScreen> {
     });
   }
 
+  double get _totalPrice => _selectedServices.fold(0.0, (sum, item) => sum + item.price);
+
+  Future<void> _loadAllData() async {
+    final stylist = await StylistService.getSelectedStylist();
+    final dateTime = await DateTimeService.getSelectedDateTime();
+    final services = await HairdressingService.getSelectedServices();
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedCreator = stylist?.name ?? "";
+      selectedDate = dateTime?.selectedDate;
+      selectedTime = dateTime?.selectedTime ?? "";
+      _selectedServices = services ?? [];
+      username = prefs.getString('username') ?? 'Khách';
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _clearBookingData();
-    _loadSelectedCreator();
-    _loadSelectedDateTime();
-    _loadSelectedServices();
-    _loadUsername();
+    _loadAllData();
   }
 
   Future<void> _clearBookingData() async {
@@ -157,46 +167,9 @@ class _BookingScreenState extends State<BookingScreen> {
     });
   }
 
-  Future<void> _loadUsername() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      username = prefs.getString('username') ?? 'Khách';
-    });
-  }
-
-  Future<void> _loadSelectedCreator() async {
-    final stylist = await StylistService.getSelectedStylist();
-    if (stylist != null && !mounted) {
-      setState(() {
-        selectedCreator = stylist.name;
-      });
-    }
-  }
-
-  Future<void> _loadSelectedDateTime() async {
-    final dateTime = await DateTimeService.getSelectedDateTime();
-    if (dateTime != null && !mounted) {
-      setState(() {
-        selectedDate = dateTime.selectedDate;
-        selectedTime = dateTime.selectedTime ?? '';
-      });
-    }
-  }
-
-  Future<void> _loadSelectedServices() async {
-    final services = await HairdressingService.getSelectedServices();
-    if (services != null && !mounted) {
-      setState(() {
-        _selectedServices = services;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
    
-    final totalPrice = _selectedServices.fold(0.0, (sum, item) => sum + item.price);
-
     return Scaffold(
       backgroundColor: ColorsConstants.secondsBackground,
       appBar: CustomAppBar(
@@ -206,7 +179,7 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
       body: Column(
         children: [
-          TabBarr(currentIndex: _selectedIndex, onTap: _onItemTapped),
+          TabBarBooking(currentIndex: _selectedIndex, onTap: _onItemTapped),
           Expanded(
             child: Builder(
               builder: (_) {
@@ -224,15 +197,11 @@ class _BookingScreenState extends State<BookingScreen> {
                       selectedDate: selectedDate,
                       selectedTime: selectedTime,
                       selectedStylist: selectedCreator,
-                      onServicesChanged: (List<ServiceItem> selected) {
-                        setState(() {
-                          _selectedServices = selected;
-                        });
-                      },
+                      onServicesChanged: (selected) => setState(() => _selectedServices = selected),
                     );
                   case 3:
                     return PaymentScreen(
-                      totalPrice: totalPrice,
+                      totalPrice: _totalPrice,
                       selectedCreator: selectedCreator,
                       selectedDate: selectedDate,
                       selectedTime: selectedTime,
@@ -240,12 +209,12 @@ class _BookingScreenState extends State<BookingScreen> {
                     );
                   case 4:
                     return QrScreen(
-                      totalPrice: totalPrice,
+                      totalPrice: _totalPrice,
                       customerName: username ?? 'Khách',
                       paymentTime: DateTime.now(),
                     );
                   case 5:
-                    return SuccessScreen();
+                    return const SuccessScreen();
                   default:
                     return Center(
                       child: Text(
@@ -276,7 +245,7 @@ class _BookingScreenState extends State<BookingScreen> {
               selectedTime: selectedTime,
               selectedServices: _selectedServices.map((e) => e.label).toList(),
               currentStep: _selectedIndex,
-              totalPrice: totalPrice,
+              totalPrice: _totalPrice,
             ),
         ],
       ),

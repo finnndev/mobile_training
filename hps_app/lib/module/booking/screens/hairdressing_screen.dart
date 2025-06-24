@@ -5,6 +5,15 @@ import 'package:hps_app/shared/utils/format.dart';
 import '../services/hairdressing_service.dart';
 import '../models/service_model.dart';
 
+final List<ServiceItem> kServices = [
+  ServiceItem(iconPath: 'assets/svgs/cut.svg', label: "Cắt tóc", price: 150000),
+  ServiceItem(iconPath: 'assets/svgs/curling.svg', label: "Uốn tóc", price: 300000),
+  ServiceItem(iconPath: 'assets/svgs/dying.svg', label: "Nhuộm tóc", price: 400000),
+  ServiceItem(iconPath: 'assets/svgs/paintbrush.svg', label: "Ép tóc", price: 250000),
+  ServiceItem(iconPath: 'assets/svgs/washing.svg', label: "Gội đầu", price: 100000),
+  ServiceItem(iconPath: 'assets/svgs/color.svg', label: "Tạo màu", price: 200000),
+];
+
 class HaidressingScreen extends StatefulWidget {
   final DateTime? selectedDate;
   final String selectedTime;
@@ -24,15 +33,6 @@ class HaidressingScreen extends StatefulWidget {
 }
 
 class _HaidressingScreenState extends State<HaidressingScreen> {
-  final List<ServiceItem> services = [
-    ServiceItem(iconPath: 'assets/svgs/cut.svg', label: "Cắt tóc", price: 150000),
-    ServiceItem(iconPath: 'assets/svgs/curling.svg', label: "Uốn tóc", price: 300000),
-    ServiceItem(iconPath: 'assets/svgs/dying.svg', label: "Nhuộm tóc", price: 400000),
-    ServiceItem(iconPath: 'assets/svgs/paintbrush.svg', label: "Ép tóc", price: 250000),
-    ServiceItem(iconPath: 'assets/svgs/washing.svg', label: "Gội đầu", price: 100000),
-    ServiceItem(iconPath: 'assets/svgs/color.svg', label: "Tạo màu", price: 200000),
-  ];
-
   List<ServiceItem> selectedServices = [];
 
   @override
@@ -49,17 +49,28 @@ class _HaidressingScreenState extends State<HaidressingScreen> {
     final services = await HairdressingService.getSelectedServices();
     setState(() {
       selectedServices = services ?? [];
-      widget.onServicesChanged(selectedServices); 
     });
+    widget.onServicesChanged(selectedServices);
+  }
+
+  void _toggleService(ServiceItem service) {
+    setState(() {
+      selectedServices.contains(service)
+          ? selectedServices.remove(service)
+          : selectedServices.add(service);
+    });
+    widget.onServicesChanged(selectedServices);
+    _saveSelectedServices();
   }
 
   @override
   Widget build(BuildContext context) {
+    const padding16 = EdgeInsets.symmetric(horizontal: 16);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Text(
             "Thêm dịch vụ",
             style: TextStyle(
@@ -71,24 +82,14 @@ class _HaidressingScreenState extends State<HaidressingScreen> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: padding16,
           child: Wrap(
             spacing: 12,
             runSpacing: 12,
-            children: services.map((service) {
+            children: kServices.map((service) {
               final isSelected = selectedServices.contains(service);
               return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (isSelected) {
-                      selectedServices.remove(service);
-                    } else {
-                      selectedServices.add(service);
-                    }
-                    widget.onServicesChanged(selectedServices); 
-                    _saveSelectedServices(); // Lưu trạng thái ngay lập tức
-                  });
-                },
+                onTap: () => _toggleService(service),
                 child: _buildServiceCard(service, isSelected),
               );
             }).toList(),
@@ -132,7 +133,7 @@ class _HaidressingScreenState extends State<HaidressingScreen> {
                   children: [
                     Text(
                       service.label,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: ColorsConstants.text, 
                         fontSize: 14,
                         fontFamily: "Roboto",
@@ -141,11 +142,10 @@ class _HaidressingScreenState extends State<HaidressingScreen> {
                     ),
                     Text(
                       formatCurrency(service.price) + ' VND',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: ColorsConstants.yellowPrimary,
                         fontSize: 12,
                         fontFamily: "Roboto",
-               
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -157,6 +157,4 @@ class _HaidressingScreenState extends State<HaidressingScreen> {
       ),
     );
   }
-
-  
 }
