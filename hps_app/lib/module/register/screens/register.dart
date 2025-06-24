@@ -151,6 +151,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Widget _buildActionButton({
+    required String label,
+    required VoidCallback onPressed,
+    required Color backgroundColor,
+    required Color textColor,
+    bool isOutlined = false,
+    IconData? icon,
+  }) {
+    final child = icon == null
+        ? Text(label, style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.w600))
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: textColor),
+              const SizedBox(width: 4),
+              Text(label, style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.w600)),
+            ],
+          );
+    return SizedBox(
+      width: double.infinity,
+      child: isOutlined
+          ? OutlinedButton(
+              onPressed: onPressed,
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: textColor),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
+              ),
+              child: child,
+            )
+          : ElevatedButton(
+              onPressed: onPressed,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: backgroundColor,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
+              ),
+              child: child,
+            ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,9 +232,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               _buildSpacer(35),
-              const Text(
-                'Đăng Ký',
-                style: TextStyle(
+              Text(
+                'Đăng ký',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
                   fontSize: 24,
                   color: Colors.white,
                   fontFamily: "Roboto",
@@ -215,58 +259,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 style: TextStyle(fontSize: 12, color: Colors.white),
               ),
               _buildSpacer(25),
-              ElevatedButton(
+              _buildActionButton(
+                label: 'Đăng ký',
                 onPressed: () => _handleRegister(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xffF3AC40),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 155,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(17),
-                  ),
-                ),
-                child: const Text(
-                  'Đăng ký',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFF1A3C30),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                backgroundColor: ColorsConstants.yellowPrimary,
+                textColor: ColorsConstants.secondsBackground,
+                isOutlined: false,
               ),
               _buildSpacer(10),
               const Text(
                 'Hoặc',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Color(0xff99A8A3)),
+                style: TextStyle(color: ColorsConstants.customBackground),
               ),
               _buildSpacer(10),
-              OutlinedButton(
+              _buildActionButton(
+                label: 'Đăng ký với Facebook',
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Đăng ký với Facebook')),
                   );
                 },
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.white),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(17),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.facebook, color: Colors.white),
-                    SizedBox(width: 4),
-                    Text(
-                      'Đăng ký với Facebook',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
+                backgroundColor: Colors.transparent,
+                textColor: ColorsConstants.text,
+                isOutlined: true,
+                icon: Icons.facebook,
               ),
               _buildSpacer(20),
               Row(

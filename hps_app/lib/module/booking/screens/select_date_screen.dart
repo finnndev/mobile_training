@@ -5,6 +5,8 @@ import 'package:table_calendar/table_calendar.dart';
 import '../services/date_time_service.dart';
 import '../models/date_time_model.dart';
 
+final List<String> kTimeSlots = ["08:00", "08:30", "09:00", "09:30", "10:00"];
+
 class SelectDateScreen extends StatefulWidget {
   final String creatorName;
   final Function(DateTime) onDateSelected;
@@ -26,7 +28,6 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
   String? _selectedTime;
   final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
-  final List<String> timeSlots = ["08:00", "08:30", "09:00", "09:30", "10:00"];
 
   @override
   void initState() {
@@ -39,8 +40,8 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
     setState(() {
       _selectedDay = dateTime?.selectedDate;
       _selectedTime = dateTime?.selectedTime;
-      if (_selectedDay != null) widget.onDateSelected(_selectedDay!); // Cập nhật callback
-      if (_selectedTime != null) widget.onTimeSelected(_selectedTime!); // Cập nhật callback
+      if (_selectedDay != null) widget.onDateSelected(_selectedDay!);
+      if (_selectedTime != null) widget.onTimeSelected(_selectedTime!);
     });
   }
 
@@ -105,9 +106,9 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
           setState(() {
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
-            widget.onDateSelected(selectedDay); 
-            _saveSelectedDateTime(); // Lưu trạng thái ngay lập tức
           });
+          widget.onDateSelected(selectedDay);
+          _saveSelectedDateTime();
         },
         onPageChanged: (focusedDay) {
           _focusedDay = focusedDay;
@@ -163,17 +164,17 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
       height: 50,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: timeSlots.length,
+        itemCount: kTimeSlots.length,
         itemBuilder: (context, index) {
-          final isSelected = _selectedTime == timeSlots[index];
-
+          final slot = kTimeSlots[index];
+          final isSelected = _selectedTime == slot;
           return GestureDetector(
             onTap: () {
               setState(() {
-                _selectedTime = timeSlots[index];
-                widget.onTimeSelected(timeSlots[index]); 
-                _saveSelectedDateTime(); // Lưu trạng thái ngay lập tức
+                _selectedTime = slot;
               });
+              widget.onTimeSelected(slot); 
+              _saveSelectedDateTime();
             },
             child: Card(
               color: isSelected ? ColorsConstants.secondsBackground : ColorsConstants.gray,
@@ -192,7 +193,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                   width: 104,
                   child: Center(
                     child: Text(
-                      timeSlots[index],
+                      slot,
                       style: TextStyle(
                         color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.text,
                         fontSize: 14,

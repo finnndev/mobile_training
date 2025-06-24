@@ -2,9 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:hps_app/shared/utils/format.dart';
-import 'package:hps_app/module/success/screens/success_screen.dart';
-import 'package:hps_app/module/qr/screens/qr_screen.dart';
-import '../widgets/custom_button.dart';
+
+const List<Map<String, String>> kPaymentMethods = [
+  {'label': 'Thanh toán tại salon', 'image': 'assets/images/ic_wallet.png'},
+  {'label': 'Ví điện tử', 'image': 'assets/icons/ic_wallet_cards.png'},
+];
+const List<Map<String, String>> kEWallets = [
+  {'label': 'VNPAY', 'image': 'assets/icons/ic_vnpay.svg'},
+  {'label': 'Momo', 'image': 'assets/icons/ic_logo_momo.svg'},
+  {'label': 'ZaloPay', 'image': 'assets/icons/ic_zalopay.svg'},
+];
+const Map<String, double> kServicePrices = {
+  'Cắt tóc': 150000,
+  'Gội đầu': 100000,
+  'Uốn tóc': 300000,
+  'Nhuộm tóc': 400000,
+  'Ép tóc': 250000,
+  'Tạo màu': 200000,
+};
+
+double _getServicePrice(String serviceLabel) => kServicePrices[serviceLabel] ?? 0.0;
 
 class PaymentScreen extends StatefulWidget {
   final double totalPrice;
@@ -136,37 +153,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _buildPaymentMethodSelector() {
-    final paymentMethods = [
-      {
-        'label': 'Thanh toán tại salon',
-        'image': 'assets/images/ic_wallet.png',
-      },
-      {
-        'label': 'Ví điện tử',
-        'image': 'assets/icons/ic_wallet_cards.png',
-      },
-    ];
     return Column(
-      children: List.generate(paymentMethods.length, (index) {
-        final method = paymentMethods[index];
+      children: List.generate(kPaymentMethods.length, (index) {
+        final method = kPaymentMethods[index];
+        final isSelected = _selectedPaymentIndex == index;
         return GestureDetector(
-          onTap: () {
-            setState(() {
-              _selectedPaymentIndex = index;
-            });
-          },
+          onTap: () => setState(() => _selectedPaymentIndex = index),
           child: Container(
             margin: const EdgeInsets.only(bottom: 8),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: _selectedPaymentIndex == index
-                  ? ColorsConstants.darkLeafGreen
-                  : ColorsConstants.gray,
+              color: isSelected ? ColorsConstants.darkLeafGreen : ColorsConstants.gray,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: _selectedPaymentIndex == index
-                    ? ColorsConstants.yellowPrimary
-                    : ColorsConstants.mistGreen,
+                color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.mistGreen,
                 width: 1.5,
               ),
             ),
@@ -178,17 +178,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     method['image']!,
                     height: 24,
                     width: 24,
-                    color: _selectedPaymentIndex == index
-                        ? ColorsConstants.yellowPrimary
-                        : null,
+                    color: isSelected ? ColorsConstants.yellowPrimary : null,
                   ),
                 const SizedBox(width: 8),
                 Text(
                   method['label']!,
                   style: TextStyle(
-                    color: _selectedPaymentIndex == index
-                        ? ColorsConstants.yellowPrimary
-                        : ColorsConstants.text,
+                    color: isSelected ? ColorsConstants.yellowPrimary : ColorsConstants.text,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -202,11 +198,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _buildEWalletSelector() {
-    final eWallets = [
-      {'label': 'Momo', 'image': 'assets/icons/ic_logo_momo.svg'},
-      {'label': 'VNPAY', 'image': 'assets/icons/ic_vnpay.svg'},
-      {'label': 'ZaloPay', 'image': 'assets/icons/ic_zalopay.svg'},
-    ];
     return Container(
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.all(12),
@@ -217,15 +208,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(eWallets.length, (index) {
-          final wallet = eWallets[index];
+        children: List.generate(kEWallets.length, (index) {
+          final wallet = kEWallets[index];
           final isSelected = _selectedEWalletIndex == index;
           return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedEWalletIndex = index;
-              });
-            },
+            onTap: () => setState(() => _selectedEWalletIndex = index),
             child: Container(
               width: 80,
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -250,7 +237,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const SizedBox(height: 4),
                   Text(
                     wallet['label']!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: ColorsConstants.text,
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
@@ -300,16 +287,4 @@ class _InfoRow extends StatelessWidget {
       ),
     );
   }
-}
-
-double _getServicePrice(String serviceLabel) {
-  const prices = {
-    'Cắt tóc': 150000,
-    'Gội đầu': 100000,
-    'Uốn tóc': 300000,
-    'Nhuộm tóc': 400000,
-    'Ép tóc': 250000,
-    'Tạo màu': 200000,
-  };
-  return (prices[serviceLabel] ?? 0.0).toDouble();
 }

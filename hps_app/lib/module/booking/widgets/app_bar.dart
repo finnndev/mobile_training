@@ -20,13 +20,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showCancelDialog = false,
   });
 
+  Future<void> _clearAllBookingData() async {
+    await StylistService.clearSelectedStylist();
+    await DateTimeService.clearSelectedDateTime();
+    await HairdressingService.clearSelectedServices();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: ColorsConstants.secondsBackground,
       elevation: 0,
       centerTitle: true,
-      title: Text(
+      title: const Text(
         "Đặt lịch làm tóc",
         style: TextStyle(
           color: ColorsConstants.text,
@@ -69,19 +75,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         content: const Text("Bạn có muốn hủy các lựa chọn hiện tại không?"),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             child: const Text("Không"),
           ),
           TextButton(
             onPressed: () async {
-              await StylistService.clearSelectedStylist();
-              await DateTimeService.clearSelectedDateTime();
-              await HairdressingService.clearSelectedServices();
+              await _clearAllBookingData();
               Navigator.pop(context);
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => HomeScreen()),
+                MaterialPageRoute(builder: (_) => const HomeScreen()),
                 (route) => false,
               );
             },
