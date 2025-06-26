@@ -47,12 +47,36 @@ class _CustomButtonState extends State<CustomButton> {
     }
   }
 
-  Widget _buildInfoRow(String left, String right, {TextStyle? leftStyle, TextStyle? rightStyle}) {
+  Widget _buildInfoRow(String left, String right, {TextStyle? leftStyle, TextStyle? rightStyle, bool rightEllipsis = true}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(left, style: leftStyle),
-        Text(right, style: rightStyle),
+        Expanded(
+          flex: 3,
+          child: Text(
+            left,
+            style: leftStyle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        const SizedBox(width: 8),
+        rightEllipsis
+            ? Expanded(
+                flex: 7, 
+                child: Text(
+                  right,
+                  style: rightStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                ),
+              )
+            : Text(
+                right,
+                style: rightStyle,
+                textAlign: TextAlign.right,
+              ),
       ],
     );
   }
@@ -72,19 +96,33 @@ class _CustomButtonState extends State<CustomButton> {
           if (widget.currentStep == 3 && widget.totalPrice != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 2, top: 4),
-              child: _buildInfoRow(
-                'Tổng thanh toán:',
-                formatCurrency(widget.totalPrice!) + ' VND',
-                leftStyle: const TextStyle(
-                  color: ColorsConstants.text,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-                rightStyle: const TextStyle(
-                  color: ColorsConstants.yellowPrimary,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Tổng thanh toán:',
+                      style: const TextStyle(
+                        color: ColorsConstants.text,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      formatCurrency(widget.totalPrice!) + ' VND',
+                      style: const TextStyle(
+                        color: ColorsConstants.yellowPrimary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                ],
               ),
             )
           else ...[
@@ -119,23 +157,38 @@ class _CustomButtonState extends State<CustomButton> {
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                 ),
+                rightEllipsis: false,
               ),
             if (widget.totalPrice != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8, bottom: 4),
-                child: _buildInfoRow(
-                  'Tổng thanh toán:',
-                  formatCurrency(widget.totalPrice!) + ' VND',
-                  leftStyle: const TextStyle(
-                    color: ColorsConstants.text,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  rightStyle: const TextStyle(
-                    color: ColorsConstants.yellowPrimary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Tổng thanh toán:',
+                        style: const TextStyle(
+                          color: ColorsConstants.text,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        formatCurrency(widget.totalPrice!) + ' VND',
+                        style: const TextStyle(
+                          color: ColorsConstants.yellowPrimary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ],
                 ),
               ),
           ],

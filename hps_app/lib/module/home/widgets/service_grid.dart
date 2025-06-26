@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hps_app/module/booking/models/home_service.dart';
-import 'package:hps_app/module/booking/screens/booking_screen.dart';
+import 'package:hps_app/module/booking/presentation/screens/booking_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
 class ServiceGrid extends StatelessWidget {

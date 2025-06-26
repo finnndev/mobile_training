@@ -21,14 +21,17 @@ class TabBarBooking extends StatelessWidget {
 
   Widget _buildStep(int index) {
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Container(
-          height: 3,
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          decoration: BoxDecoration(
-            color: index <= currentIndex ? ColorsConstants.yellowPrimary : ColorsConstants.text,
-            borderRadius: BorderRadius.circular(2.5),
+      child: GestureDetector(
+        onTap: () => onTap(index),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Container(
+            height: 3,
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              color: index <= currentIndex ? ColorsConstants.yellowPrimary : ColorsConstants.text,
+              borderRadius: BorderRadius.circular(2.5),
+            ),
           ),
         ),
       ),

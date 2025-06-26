@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../booking/screens/booking_screen.dart';
+import '../../booking/presentation/screens/booking_screen.dart';
 import '../../home/screens/home_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 

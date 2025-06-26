@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/service_model.dart';
+import '../../models/service_model.dart';
 
 class HairdressingService {
   static const String _selectedServicesKey = 'selected_services';
