@@ -25,7 +25,11 @@ android {
                 "proguard-rules.pro"
             )
         }
+        buildFeatures {
+            viewBinding = true
+        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -36,6 +40,9 @@ android {
 }
 
 dependencies {
+
+    //import
+    implementation(libs.glide)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

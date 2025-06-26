@@ -6,14 +6,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.complex_ui.adapter.ProductAdapter
+import com.example.complex_ui.databinding.ActivityMainBinding
 import com.example.complex_ui.fragment.HomeFragment
 import com.example.complex_ui.fragment.Card
 import com.example.complex_ui.fragment.Order
 import com.example.complex_ui.fragment.Account
+import com.example.complex_ui.model.generateFakeProducts
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
@@ -31,22 +37,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        drawerLayout = findViewById(R.id.main)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-//        toolbar.setOnClickListener {
-//            drawerLayout.open()
-//        }
 
-        //Setup Toolbar
-        val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar,
-            R.string.open_nav,
-            R.string.close_nav
-        )
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
+        openDrawer()
         navigationEvent()
         bottomNavigationEvent()
         if (savedInstanceState == null) {
@@ -54,7 +46,15 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.frame_layout, HomeFragment())
                 .commit()
         }
+    }
 
+    fun openDrawer() {
+        drawerLayout = findViewById(R.id.main)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
     }
 
     fun navigationEvent() {
