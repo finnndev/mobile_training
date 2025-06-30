@@ -3,6 +3,8 @@ import 'package:hps_app/module/home/screens/home_screen.dart';
 import 'package:hps_app/module/login/screens/login_screen.dart';
 import 'package:hps_app/module/splash/screens/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:hps_app/module/booking/presentation/providers/booking_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +23,12 @@ void main() async {
     initialScreen = LoginScreen();
   }
 
-  runApp(MainApp(initialScreen: initialScreen));
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => BookingState(),
+      child: MainApp(initialScreen: initialScreen),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

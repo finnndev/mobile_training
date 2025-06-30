@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/stylist_model.dart';
+import '../../models/stylist_model.dart';
 
 class StylistService {
   static const String _selectedStylistKey = 'selected_stylist';

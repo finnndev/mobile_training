@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/shared/constants/colors.dart';
-import '../services/stylist_service.dart'; 
-import '../services/date_time_service.dart';
-import '../services/hairdressing_service.dart';
-import 'package:hps_app/module/home/screens/home_screen.dart'; // Import HomeScreen
+import '../../data/services/stylist_service.dart'; 
+import '../../data/services/date_time_service.dart';
+import '../../data/services/hairdressing_service.dart';
+import 'package:hps_app/module/home/screens/home_screen.dart'; 
+import '../../constants/asset_path.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onBack;
   final VoidCallback? onNext;
   final bool isItemSelected;
   final bool showCancelDialog;
 
-  const CustomAppBar({
+  const AppBarWidget({
     super.key,
     this.onBack,
     this.onNext,
@@ -42,7 +43,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       leading: IconButton(
-        icon: SvgPicture.asset('assets/svgs/left.svg', width: 24, height: 24),
+        icon: SvgPicture.asset(AssetPath.left, width: 24, height: 24),
         onPressed: () async {
           if (onBack != null) {
             if (showCancelDialog) {
@@ -56,7 +57,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: SvgPicture.asset(
-            'assets/svgs/right.svg',
+            AssetPath.right,
             width: 24,
             height: 24,
             color: isItemSelected ? Colors.white : ColorsConstants.text,
