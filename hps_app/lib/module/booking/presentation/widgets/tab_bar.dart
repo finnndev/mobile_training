@@ -14,7 +14,7 @@ class TabBarBooking extends StatelessWidget {
       color: ColorsConstants.secondsBackground,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(5, (index) => _buildStep(index)),
+        children: List.generate(4, (index) => _buildStep(index)),
       ),
     );
   }

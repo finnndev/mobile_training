@@ -68,14 +68,7 @@ class _BookingScreenState extends State<BookingScreen> {
     selectedTime: state.selectedTime,
     selectedServices: state.selectedServices.map((e) => e.label).toList(),
   );
-                  case 4:
-                    return QrScreen(
-                      totalPrice: state.totalPrice,
-                      customerName: state.username ?? 'Khách',
-                      paymentTime: DateTime.now(),
-                    );
-                  case 5:
-                    return const SuccessScreen();
+                
                   default:
                     return Center(
                       child: Text(
@@ -90,7 +83,33 @@ class _BookingScreenState extends State<BookingScreen> {
           if (state.selectedIndex == 3)
             CustomButton(
               creatorName: state.selectedCreator,
-              onPressed: state.continueBooking,
+              onPressed: () {
+                final paymentMethod = state.selectedPaymentMethodLabel;
+                if (paymentMethod == 'salon') {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SuccessScreen()),
+                  );
+                } else if (paymentMethod == 'ewallet' && state.selectedEWallet != null) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => QrScreen(
+                        totalPrice: state.totalPrice,
+                        customerName: state.username ?? 'Khách',
+                        paymentTime: DateTime.now(),
+                      ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Vui lòng chọn loại ví điện tử!'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
               text: "Hoàn tất",
               selectedDate: state.selectedDate,
               selectedTime: state.selectedTime,
