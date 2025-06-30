@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hps_app/module/booking/constants/asset_path.dart';
 import 'package:hps_app/module/home/screens/home_screen.dart';
 import 'package:hps_app/module/register/screens/register.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:hps_app/shared/constants/mock_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -170,14 +172,15 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: ColorsConstants.secondsBackground,
       body: Stack(
         children: [
-          SingleChildScrollView(
+          SafeArea(
+            child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/images/img_logo.png',
+                  AssetPath.logo,
                     width: 120,
                     height: 120,
                     fit: BoxFit.cover,
@@ -283,6 +286,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 20),
                 ],
               ),
+              ),
             ),
           ),
           if (_isLoading)
@@ -300,6 +304,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
         ],
+      
       ),
     );
   }

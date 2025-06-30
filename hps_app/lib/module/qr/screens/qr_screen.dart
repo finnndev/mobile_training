@@ -30,25 +30,27 @@ class QrScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: ColorsConstants.secondsBackground,
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  sizedBox16,
-                  QrHeader(timeStr: timeStr),
-                  sizedBox16,
-                  PaymentInfo(priceStr: priceStr, contentStr: contentStr),
-                  sizedBox20,
-                  const QrActionButtons(),
-                  sizedBox16,
-                ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    sizedBox16,
+                    QrHeader(timeStr: timeStr),
+                    sizedBox16,
+                    PaymentInfo(priceStr: priceStr, contentStr: contentStr),
+                    sizedBox20,
+                    const QrActionButtons(),
+                    sizedBox16,
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

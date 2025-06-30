@@ -6,6 +6,8 @@ import '../../models/service_model.dart';
 import '../../data/services/stylist_service.dart';
 import '../../data/services/date_time_service.dart';
 import '../../data/services/hairdressing_service.dart';
+import '../../constants/booking_constants.dart';
+import '../../models/ewallet_model.dart';
 
 class BookingState with ChangeNotifier {
   int _selectedIndex = 0;
@@ -27,6 +29,21 @@ class BookingState with ChangeNotifier {
   double get totalPrice => _selectedServices.fold(0.0, (sum, item) => sum + item.price);
   int get selectedPaymentIndex => _selectedPaymentIndex;
   int get selectedEWalletIndex => _selectedEWalletIndex;
+
+  // Getter cho phương thức thanh toán hiện tại
+  String get selectedPaymentMethodLabel {
+    if (_selectedPaymentIndex == 0) return 'salon';
+    if (_selectedPaymentIndex == 1) return 'ewallet';
+    return '';
+  }
+
+  // Getter cho loại ví điện tử đã chọn (nếu có)
+  EWallet? get selectedEWallet {
+    if (_selectedPaymentIndex == 1 && _selectedEWalletIndex >= 0 && _selectedEWalletIndex < kEWallets.length) {
+      return kEWallets[_selectedEWalletIndex];
+    }
+    return null;
+  }
 
   // Load và clear dữ liệu
   Future<void> loadInitialData() async {

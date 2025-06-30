@@ -51,7 +51,7 @@ class QrActionButtons extends StatelessWidget {
                   context,
                   MaterialPageRoute(builder: (context) => const SuccessScreen()),
                 );
-                _showSnackBar(context, 'Thanh toán thành công');
+               
               },
             ),
           ),

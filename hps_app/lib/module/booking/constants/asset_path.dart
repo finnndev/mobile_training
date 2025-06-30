@@ -24,5 +24,5 @@ class AssetPath {
   static const right = 'assets/svgs/right.svg';
   static const rightWhile = 'assets/svgs/right_while.svg';
 
- 
+ static const logo = 'assets/images/img_logo.png';
 }
