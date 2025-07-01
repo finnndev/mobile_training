@@ -7,13 +7,13 @@ import '../../data/services/hairdressing_service.dart';
 import 'package:hps_app/module/home/screens/home_screen.dart'; 
 import '../../constants/asset_path.dart';
 
-class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+class BookingAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onBack;
   final VoidCallback? onNext;
   final bool isItemSelected;
   final bool showCancelDialog;
 
-  const AppBarWidget({
+  const BookingAppBar({
     super.key,
     this.onBack,
     this.onNext,
@@ -72,12 +72,25 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Xác nhận hủy"),
-        content: const Text("Bạn có muốn hủy các lựa chọn hiện tại không?"),
+        backgroundColor: ColorsConstants.secondsBackground,
+        title: const Text(
+          "Xác nhận hủy",
+          style: TextStyle(color: ColorsConstants.yellowPrimary),
+        ),
+        content: const Text(
+          "Bạn có muốn hủy các lựa chọn hiện tại không?",
+          style: TextStyle(color: Colors.white),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Không"),
+            child: const Text(
+              "Không",
+              style: TextStyle(color: ColorsConstants.yellowPrimary),
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -88,7 +101,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                 (route) => false,
               );
             },
-            child: const Text("Có"),
+            child: const Text(
+              "Có",
+              style: TextStyle(color: ColorsConstants.yellowPrimary),
+            ),
           ),
         ],
       ),
