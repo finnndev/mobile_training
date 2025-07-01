@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hps_app/module/options/widgets/schedule_screen.dart';
+import 'package:hps_app/module/menu/widgets/schedule_screen.dart';
 import '../../home/screens/home_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 

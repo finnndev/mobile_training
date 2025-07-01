@@ -3,6 +3,10 @@ import 'package:hps_app/module/booking/presentation/providers/booking_state.dart
 import 'package:provider/provider.dart';
 import 'package:hps_app/module/qr/screens/qr_screen.dart';
 import 'package:hps_app/module/success/screens/success_screen.dart';
+import 'package:hps_app/module/menu/widgets/service.dart';
+import 'package:intl/intl.dart';
+import 'package:hps_app/module/menu/widgets/model%20.dart';
+import 'package:hps_app/shared/utils/format.dart';
 
 import 'package:hps_app/shared/constants/colors.dart';
 import 'payment_screen.dart';
@@ -37,7 +41,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
     return Scaffold(
       backgroundColor: ColorsConstants.secondsBackground,
-      appBar: AppBarWidget(
+      appBar: BookingAppBar(
         onBack: () => state.goBack(context),
         onNext: state.continueBooking,
         showCancelDialog: state.selectedIndex == 0,
@@ -83,7 +87,22 @@ class _BookingScreenState extends State<BookingScreen> {
           if (state.selectedIndex == 3)
             CustomButton(
               creatorName: state.selectedCreator,
-              onPressed: () {
+              onPressed: () async {
+                
+                final now = DateTime.now();
+                final dateStr = DateFormat('dd/MM/yyyy').format(state.selectedDate ?? now);
+                final priceStr = formatCurrency(state.totalPrice) + ' VND';
+                final serviceStr = state.selectedServices.map((e) => e.label).join(', ');
+                final schedule = ScheduleModel(
+                  time: state.selectedTime,
+                  date: dateStr,
+                  stylist: state.selectedCreator,
+                  service: serviceStr,
+                  price: priceStr,
+                  type: 'upcoming',
+                );
+                await ScheduleService.addSchedule(schedule);
+                
                 final paymentMethod = state.selectedPaymentMethodLabel;
                 if (paymentMethod == 'salon') {
                   Navigator.pushReplacement(

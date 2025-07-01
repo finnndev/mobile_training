@@ -3,7 +3,7 @@ import 'package:hps_app/module/home/widgets/banner_slide.dart';
 import 'package:hps_app/module/home/widgets/service_grid.dart';
 import 'package:hps_app/module/home/widgets/trending_styles.dart';
 import 'package:hps_app/module/notification/screens/notification.dart';
-import 'package:hps_app/module/options/screens/options.dart';
+import 'package:hps_app/module/menu/screens/side_menu_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:hps_app/shared/utils/asset_path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.menu, color: Colors.white),
             onPressed:
-                () => showBottomSheetModal(context, const OptionsScreen()),
+                () => showBottomSheetModal(context, const SideMenuScreen()),
           ),
         ],
       ),
