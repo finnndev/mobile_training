@@ -58,8 +58,6 @@ Future<void> _confirmCancel(int index) async {
   }
 }
 
-
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -131,18 +129,36 @@ Future<void> _confirmCancel(int index) async {
         final model = data[index];
         return Column(
           children: [
-            ScheduleCard(
-              model: model,
-              actions: isUpcoming
-                  ? [
-                      _button('Hủy', () => _confirmCancel(index)),
-
-                      _button('Đổi lịch', () {}),
-                    ]
-                  : [
-                      _button('Đánh giá', () {}),
-                      _button('Đặt lại', () {}),
-                    ],
+            Stack(
+              children: [
+                ScheduleCard(
+                  model: model,
+                  actions: isUpcoming
+                      ? [
+                          _button('Hủy', () => _confirmCancel(index)),
+                          _button('Đổi lịch', () {}),
+                        ]
+                      : [
+                          _button('Đánh giá', () {}),
+                          _button('Đặt lại', () {}),
+                        ],
+                ),
+                if (!isUpcoming)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      icon: const Icon(Icons.close, color: Colors.red),
+                      tooltip: 'Ẩn lịch sử này',
+                      onPressed: () async {
+                        setState(() {
+                          history.removeAt(index);
+                        });
+                        await ScheduleService.updateAll([...upcoming, ...history]);
+                      },
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 16),
           ],
