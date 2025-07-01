@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/module/login/screens/login_screen.dart';
 import 'package:hps_app/module/menu/widgets/schedule_screen.dart';
+import 'package:hps_app/module/menu/widgets/settings_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -92,10 +93,11 @@ class _SideMenuScreenState extends State<SideMenuScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: 6,
                   itemBuilder: (context, index) {
-                    final items = const [
+                    final items = [
                       OptionItem(
                         icon: 'assets/svgs/settings.svg',
                         title: 'Cài đặt',
+                        onChanged: _loadUsername,
                       ),
                       OptionItem(
                         icon: 'assets/svgs/calendar.svg',
@@ -168,19 +170,22 @@ class _SideMenuScreenState extends State<SideMenuScreen> {
 class OptionItem extends StatelessWidget {
   final String icon;
   final String title;
+  final VoidCallback? onChanged;
 
-  const OptionItem({super.key, required this.icon, required this.title});
+  const OptionItem({super.key, required this.icon, required this.title, this.onChanged});
 
-  void handleOptionTap(BuildContext context) {
-    if (title == 'Lịch đặt của tôi') {
+  void handleOptionTap(BuildContext context) async {
+    if (title == 'Cài đặt') {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+      );
+      if (onChanged != null) onChanged!();
+    } else if (title == 'Lịch đặt của tôi') {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ScheduleScreen()),
       );
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Đã nhấn vào: $title')));
     }
   }
 

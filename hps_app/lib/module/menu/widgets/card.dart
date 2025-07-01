@@ -75,11 +75,7 @@ class ScheduleCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          color: ColorsConstants.text,
-                          size: 16,
-                        ),
+                        
                       ],
                     ),
                     const SizedBox(height: 12),

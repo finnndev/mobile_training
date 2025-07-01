@@ -4,12 +4,26 @@ import 'package:intl/intl.dart';
 import 'widgets/qr_header.dart';
 import 'widgets/payment_info.dart';
 import 'widgets/qr_action_buttons.dart';
+import 'package:hps_app/module/menu/widgets/model%20.dart';
+import 'package:hps_app/module/menu/widgets/service.dart';
+import 'package:hps_app/module/success/screens/success_screen.dart';
 
 class QrScreen extends StatelessWidget {
   final double? totalPrice;
   final String? customerName;
   final DateTime? paymentTime;
-  const QrScreen({super.key, this.totalPrice, this.customerName, this.paymentTime});
+  final String? stylist;
+  final String? service;
+  final String? price;
+  const QrScreen({
+    super.key,
+    this.totalPrice,
+    this.customerName,
+    this.paymentTime,
+    this.stylist,
+    this.service,
+    this.price,
+  });
 
   String _formatPrice(double? price) {
     if (price == null) return '';
@@ -22,7 +36,7 @@ class QrScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final now = paymentTime ?? DateTime.now();
     final timeStr = DateFormat('HH:mm').format(now);
-    final priceStr = _formatPrice(totalPrice);
+    final priceStr = price ?? _formatPrice(totalPrice);
     final contentStr = _paymentContent(customerName);
 
     const sizedBox16 = SizedBox(height: 16);
@@ -43,6 +57,39 @@ class QrScreen extends StatelessWidget {
                     sizedBox16,
                     PaymentInfo(priceStr: priceStr, contentStr: contentStr),
                     sizedBox20,
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorsConstants.yellowPrimary,
+                        foregroundColor: Colors.black,
+                        minimumSize: const Size.fromHeight(48),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () async {
+                        final model = ScheduleModel(
+                          time: stylist != null && paymentTime != null
+                              ? DateFormat('HH:mm').format(paymentTime!)
+                              : DateFormat('HH:mm').format(DateTime.now()),
+                          date: stylist != null && paymentTime != null
+                              ? DateFormat('dd/MM/yyyy').format(paymentTime!)
+                              : DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                          stylist: stylist ?? customerName ?? 'Khách',
+                          service: service ?? 'Thanh toán QR',
+                          price: priceStr,
+                          type: 'history',
+                        );
+                        await ScheduleService.addSchedule(model);
+                        if (context.mounted) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const SuccessScreen()),
+                          );
+                        }
+                      },
+                      child: const Text('Thanh toán', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    sizedBox16,
                     const QrActionButtons(),
                     sizedBox16,
                   ],

@@ -18,7 +18,6 @@ import '../widgets/app_bar.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/tab_bar.dart';
 
-
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
 
@@ -48,31 +47,33 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
       body: Column(
         children: [
-          TabBarBooking(currentIndex: state.selectedIndex, onTap: state.onTabTapped),
+          TabBarBooking(
+            currentIndex: state.selectedIndex,
+            onTap: state.onTabTapped,
+          ),
           Expanded(
             child: Builder(
               builder: (_) {
                 switch (state.selectedIndex) {
                   case 0:
-  return StylistSelector();
-                 case 1:
-  return SelectDateScreen(
-    creatorName: state.selectedCreator,
-  );
+                    return StylistSelector();
+                  case 1:
+                    return SelectDateScreen(creatorName: state.selectedCreator);
                   case 2:
-  return HaidressingScreen(
-    selectedDate: state.selectedDate,
-    selectedTime: state.selectedTime,
-    selectedStylist: state.selectedCreator,
-  );
+                    return HaidressingScreen(
+                      selectedDate: state.selectedDate,
+                      selectedTime: state.selectedTime,
+                      selectedStylist: state.selectedCreator,
+                    );
                   case 3:
-  return PaymentScreen(
-    selectedCreator: state.selectedCreator,
-    selectedDate: state.selectedDate,
-    selectedTime: state.selectedTime,
-    selectedServices: state.selectedServices.map((e) => e.label).toList(),
-  );
-                
+                    return PaymentScreen(
+                      selectedCreator: state.selectedCreator,
+                      selectedDate: state.selectedDate,
+                      selectedTime: state.selectedTime,
+                      selectedServices:
+                          state.selectedServices.map((e) => e.label).toList(),
+                    );
+
                   default:
                     return Center(
                       child: Text(
@@ -88,35 +89,51 @@ class _BookingScreenState extends State<BookingScreen> {
             CustomButton(
               creatorName: state.selectedCreator,
               onPressed: () async {
-                
                 final now = DateTime.now();
                 final dateStr = DateFormat('dd/MM/yyyy').format(state.selectedDate ?? now);
                 final priceStr = formatCurrency(state.totalPrice) + ' VND';
                 final serviceStr = state.selectedServices.map((e) => e.label).join(', ');
-                final schedule = ScheduleModel(
-                  time: state.selectedTime,
-                  date: dateStr,
-                  stylist: state.selectedCreator,
-                  service: serviceStr,
-                  price: priceStr,
-                  type: 'upcoming',
-                );
-                await ScheduleService.addSchedule(schedule);
-                
                 final paymentMethod = state.selectedPaymentMethodLabel;
                 if (paymentMethod == 'salon') {
+                  // Lưu lịch sắp tới
+                  final schedule = ScheduleModel(
+                    time: state.selectedTime,
+                    date: dateStr,
+                    stylist: state.selectedCreator,
+                    service: serviceStr,
+                    price: priceStr,
+                    type: 'upcoming',
+                  );
+                  await ScheduleService.addSchedule(schedule);
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const SuccessScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const SuccessScreen(),
+                    ),
                   );
                 } else if (paymentMethod == 'ewallet' && state.selectedEWallet != null) {
+                  // Không lưu, chỉ chuyển sang QR, truyền đúng paymentTime là ngày giờ đã đặt
+                  DateTime? paymentTime;
+                  if (state.selectedDate != null && state.selectedTime != null) {
+                    final timeParts = state.selectedTime!.split(':');
+                    paymentTime = DateTime(
+                      state.selectedDate!.year,
+                      state.selectedDate!.month,
+                      state.selectedDate!.day,
+                      int.parse(timeParts[0]),
+                      int.parse(timeParts[1]),
+                    );
+                  }
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => QrScreen(
                         totalPrice: state.totalPrice,
                         customerName: state.username ?? 'Khách',
-                        paymentTime: DateTime.now(),
+                        paymentTime: paymentTime,
+                        stylist: state.selectedCreator,
+                        service: serviceStr,
+                        price: priceStr,
                       ),
                     ),
                   );
@@ -132,7 +149,8 @@ class _BookingScreenState extends State<BookingScreen> {
               text: "Hoàn tất",
               selectedDate: state.selectedDate,
               selectedTime: state.selectedTime,
-              selectedServices: state.selectedServices.map((e) => e.label).toList(),
+              selectedServices:
+                  state.selectedServices.map((e) => e.label).toList(),
               currentStep: state.selectedIndex,
               totalPrice: state.totalPrice,
             )
@@ -143,7 +161,8 @@ class _BookingScreenState extends State<BookingScreen> {
               text: "Tiếp tục",
               selectedDate: state.selectedDate,
               selectedTime: state.selectedTime,
-              selectedServices: state.selectedServices.map((e) => e.label).toList(),
+              selectedServices:
+                  state.selectedServices.map((e) => e.label).toList(),
               currentStep: state.selectedIndex,
             ),
         ],
@@ -151,4 +170,3 @@ class _BookingScreenState extends State<BookingScreen> {
     );
   }
 }
-
