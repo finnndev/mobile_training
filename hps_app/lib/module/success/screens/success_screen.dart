@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../booking/presentation/screens/booking_screen.dart';
+import 'package:hps_app/module/options/widgets/schedule_screen.dart';
 import '../../home/screens/home_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 
@@ -62,7 +62,6 @@ class SuccessScreen extends StatelessWidget {
               ),
             ),
 
-            // Phần dưới cùng: 2 nút điều hướng
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Column(
@@ -72,7 +71,7 @@ class SuccessScreen extends StatelessWidget {
                     height: 56,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorsConstants.yellowPrimary, // Thay #F3AC40 bằng ColorsConstants.yellowPrimary
+                        backgroundColor: ColorsConstants.yellowPrimary, 
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -81,7 +80,7 @@ class SuccessScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BookingScreen(),
+                            builder: (context) => ScheduleScreen(),
                           ),
                         );
                       },
@@ -92,6 +91,7 @@ class SuccessScreen extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                           fontFamily: "Roboto",
+
                         ),
                       ),
                     ),

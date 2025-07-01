@@ -31,6 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadUsername();
   }
 
+  void showBottomSheetModal(BuildContext context, Widget child) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: ColorsConstants.secondsBackground,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => child,
+    );
+  }
+
   Future<void> _loadUsername() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -41,28 +53,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsConstants.secondsBackground,
+      backgroundColor: ColorsConstants.darkLeafGreen,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ColorsConstants.darkLeafGreen,
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Image.asset(AssetPath.urlImage.logo, height: 32),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications, color: Colors.white),
+            icon: Icon(Icons.notifications, color: Colors.white),
             onPressed:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => NotificationScreen()),
-                ),
+                () => showBottomSheetModal(context, const NotificationScreen()),
           ),
           IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
+            icon: Icon(Icons.menu, color: Colors.white),
             onPressed:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => OptionsScreen()),
-                ),
+                () => showBottomSheetModal(context, const OptionsScreen()),
           ),
         ],
       ),
@@ -74,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
             RichText(
               text: TextSpan(
                 text: "Xin chào, ",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -82,10 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   TextSpan(
                     text: username,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      color: Colors.yellow,
+                      color: ColorsConstants.yellowPrimary,
                     ),
                   ),
                 ],
@@ -103,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
               activeIndex: activeIndex,
             ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               "Dịch vụ",
               style: TextStyle(
                 fontSize: 24,
@@ -114,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 16),
             const ServiceGrid(),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               "Mẫu xu hướng",
               style: TextStyle(
                 fontSize: 24,
