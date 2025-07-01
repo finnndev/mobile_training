@@ -31,8 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadUsername();
   }
 
-  void showBottomSheetModal(BuildContext context, Widget child) {
-    showModalBottomSheet(
+
+  void showBottomSheetModal(BuildContext context, Widget child) async {
+    // Listen for when the bottom sheet is closed, then reload username
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: ColorsConstants.secondsBackground,
@@ -41,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       builder: (context) => child,
     );
+    // Reload username in case it was changed in settings/options
+    _loadUsername();
   }
 
   Future<void> _loadUsername() async {

@@ -128,7 +128,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    await MockData.saveUser(fullName, phoneOrEmail, password);
+    // Kiểm tra định dạng số điện thoại hoặc email
+    bool isPhone = RegExp(r'^(0[0-9]{9,10})$').hasMatch(phoneOrEmail);
+    bool isEmail = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}').hasMatch(phoneOrEmail);
+    if (!isPhone && !isEmail) {
+      _showSnackBar(context, 'Vui lòng nhập đúng số điện thoại hoặc email!', Colors.red);
+      return;
+    }
+
+    // Lưu user với đúng trường phone/email
+    await MockData.saveUser(
+      fullName,
+      isPhone ? phoneOrEmail : '',
+      password,
+      email: isEmail ? phoneOrEmail : '',
+    );
 
     _showSnackBar(context, 'Đăng ký thành công!', Colors.green);
 

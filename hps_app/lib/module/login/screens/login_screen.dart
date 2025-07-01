@@ -15,22 +15,23 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late TextEditingController _fullNameController;
+  late TextEditingController _phoneOrEmailController;
   late TextEditingController _passwordController;
+  
   bool _isLoading = false;
   bool _isPasswordVisible = false;
 
   @override
   void initState() {
     super.initState();
-    _fullNameController = TextEditingController();
+    _phoneOrEmailController = TextEditingController();
     _passwordController = TextEditingController();
     _loadSavedData();
   }
 
   @override
   void dispose() {
-    _fullNameController.dispose();
+    _phoneOrEmailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -39,14 +40,17 @@ class _LoginScreenState extends State<LoginScreen> {
     List<Map<String, String>> users = await MockData.getUsers();
     if (users.isNotEmpty) {
       Map<String, String> lastUser = users.last;
-      _fullNameController.text = lastUser['fullName'] ?? '';
+      // Ưu tiên điền số điện thoại, nếu không có thì điền email
+      _phoneOrEmailController.text = lastUser['phone']?.isNotEmpty == true
+          ? lastUser['phone']!
+          : (lastUser['email'] ?? '');
       _passwordController.text = lastUser['password'] ?? '';
     }
   }
 
   Widget _buildTextField(String hint, {bool isPassword = false}) {
     return TextField(
-      controller: isPassword ? _passwordController : _fullNameController,
+      controller: isPassword ? _passwordController : _phoneOrEmailController,
       obscureText: isPassword ? !_isPasswordVisible : false,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
@@ -100,19 +104,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 ? null
                 : () async {
                   setState(() => _isLoading = true);
-                  String fullName = _fullNameController.text.trim();
+                  String input = _phoneOrEmailController.text.trim();
                   String password = _passwordController.text.trim();
                   List<Map<String, String>> users = await MockData.getUsers();
 
-                  bool isValid = users.any(
+                  Map<String, String>? matchedUser = users.firstWhere(
                     (user) =>
-                        user['fullName'] == fullName &&
+                        (user['phone'] == input ||
+                         user['email'] == input) &&
                         user['password'] == password,
+                    orElse: () => {},
                   );
 
-                  if (isValid) {
+                  if (matchedUser.isNotEmpty) {
                     final prefs = await SharedPreferences.getInstance();
-                    await prefs.setString('username', fullName);
+                    await prefs.setString('phone', matchedUser['phone'] ?? '');
+                    await prefs.setString('email', matchedUser['email'] ?? '');
 
                     Navigator.pushReplacement(
                       context,
@@ -124,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                          'Sai họ và tên hoặc mật khẩu! Vui lòng thử lại.',
+                          'Sai số điện thoại/email hoặc mật khẩu! Vui lòng thử lại.',
                           style: TextStyle(color: Colors.white),
                         ),
                         backgroundColor: Colors.red,
@@ -213,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  _buildTextField('Họ và tên'),
+                  _buildTextField('Số điện thoại hoặc Gmail'),
                   const SizedBox(height: 32),
                   _buildTextField('Mật khẩu', isPassword: true),
                   const SizedBox(height: 16),

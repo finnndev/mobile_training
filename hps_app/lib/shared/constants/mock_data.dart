@@ -5,12 +5,13 @@ class MockData {
 
   static Future<void> saveUser(
     String fullName,
-    String phoneOrEmail,
-    String password,
-  ) async {
+    String phone,
+    String password, {
+    String email = '',
+  }) async {
     final prefs = await SharedPreferences.getInstance();
     List<String> users = prefs.getStringList(_userKey) ?? [];
-    users.add('$fullName|$phoneOrEmail|$password');
+    users.add('$fullName|$phone|$email|$password');
     await prefs.setStringList(_userKey, users);
   }
 
@@ -21,8 +22,9 @@ class MockData {
       final parts = user.split('|');
       return {
         'fullName': parts[0],
-        'phoneOrEmail': parts[1],
-        'password': parts[2],
+        'phone': parts.length > 1 ? parts[1] : '',
+        'email': parts.length > 2 ? parts[2] : '',
+        'password': parts.length > 3 ? parts[3] : '',
       };
     }).toList();
   }

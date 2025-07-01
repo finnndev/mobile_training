@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/module/login/screens/login_screen.dart';
 import 'package:hps_app/module/options/widgets/schedule_screen.dart';
+import 'package:hps_app/module/options/screens/settings_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class OptionsScreen extends StatefulWidget {
   const OptionsScreen({super.key});
@@ -165,31 +167,46 @@ class _OptionsScreenState extends State<OptionsScreen> {
   }
 }
 
-class OptionItem extends StatelessWidget {
+class OptionItem extends StatefulWidget {
   final String icon;
   final String title;
 
   const OptionItem({super.key, required this.icon, required this.title});
 
+  @override
+  State<OptionItem> createState() => _OptionItemState();
+}
+
+class _OptionItemState extends State<OptionItem> {
   void handleOptionTap(BuildContext context) {
-    if (title == 'Lịch đặt của tôi') {
+    if (widget.title == 'Lịch đặt của tôi') {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ScheduleScreen()),
       );
+    } else if (widget.title == 'Cài đặt') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+      ).then((_) async {
+        // Reload username in parent OptionsScreen after returning from Settings
+        if (context.findAncestorStateOfType<_OptionsScreenState>() != null) {
+          await context.findAncestorStateOfType<_OptionsScreenState>()!._loadUsername();
+        }
+      });
     } else {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Đã nhấn vào: $title')));
+      ).showSnackBar(SnackBar(content: Text('Đã nhấn vào: ${widget.title}')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: SvgPicture.asset(icon),
+      leading: SvgPicture.asset(widget.icon),
       title: Text(
-        title,
+        widget.title,
         style: const TextStyle(color: Colors.white, fontSize: 16),
       ),
       trailing: const Icon(
