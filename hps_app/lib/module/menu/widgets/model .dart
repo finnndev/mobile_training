@@ -15,7 +15,8 @@ class ScheduleModel {
         time: json['time'],
         date: json['date'],
         stylist: json['stylist'],
-        service: json['service'],
+       service: json['service'] ?? '',
+
         price: json['price'],
         type: json['type'],
       );

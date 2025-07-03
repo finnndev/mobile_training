@@ -154,16 +154,15 @@ Future<void> _confirmCancel(int index) async {
                                     await showDialog(
                                       context: context,
                                       builder: (context) => EditScheduleDialog(
-                                        model: model,
-                                        stylists: stylists,
-                                        services: services,
-                                        onSave: (edited) async {
-                                          setState(() {
-                                            data[index] = edited;
-                                          });
-                                          await ScheduleService.updateAll([...upcoming, ...history]);
-                                        },
-                                      ),
+  model: model,
+  onSave: (edited) async {
+    setState(() {
+      data[index] = edited;
+    });
+    await ScheduleService.updateAll([...upcoming, ...history]);
+  },
+)
+
                                     );
                                   }),
                                 ]
