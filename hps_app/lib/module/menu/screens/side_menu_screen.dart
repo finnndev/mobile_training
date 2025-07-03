@@ -3,6 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hps_app/module/login/screens/login_screen.dart';
 import 'package:hps_app/module/menu/widgets/schedule_screen.dart';
 import 'package:hps_app/module/menu/widgets/settings_screen.dart';
+import 'package:hps_app/module/menu/widgets/favorite_screen.dart';
+import 'package:hps_app/module/menu/widgets/help_center_screen.dart';
+import 'package:hps_app/module/menu/widgets/policy_screen.dart';
+import 'package:hps_app/module/menu/widgets/about_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -175,17 +179,44 @@ class OptionItem extends StatelessWidget {
   const OptionItem({super.key, required this.icon, required this.title, this.onChanged});
 
   void handleOptionTap(BuildContext context) async {
-    if (title == 'Cài đặt') {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SettingsScreen()),
-      );
-      if (onChanged != null) onChanged!();
-    } else if (title == 'Lịch đặt của tôi') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ScheduleScreen()),
-      );
+    switch (title) {
+      case 'Cài đặt':
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SettingsScreen()),
+        );
+        if (onChanged != null) onChanged!();
+        break;
+      case 'Lịch đặt của tôi':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ScheduleScreen()),
+        );
+        break;
+      case 'Ưa thích':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const FavoriteScreen()),
+        );
+        break;
+      case 'Trung tâm trợ giúp':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HelpCenterScreen()),
+        );
+        break;
+      case 'Chính sách và điều khoản':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const PolicyScreen()),
+        );
+        break;
+      case 'Về Tran Manh Hair Passion Studio':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AboutScreen()),
+        );
+        break;
     }
   }
 
