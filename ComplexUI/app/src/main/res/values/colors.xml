@@ -26,4 +26,8 @@
     <color name="light_green">#FF8BC34A</color>
     <color name="deep_purple">#FF673AB7</color>
     <color name="lavender">#B692f7</color>
+
+    <color name="primary">#6750A4</color>
+    <color name="secondary">#625B71</color>
+
 </resources>
