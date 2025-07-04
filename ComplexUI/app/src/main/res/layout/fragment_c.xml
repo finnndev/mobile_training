@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.Account">
+    tools:context=".fragment.FragmentB"
+    android:id="@+id/fragment_c"
+    android:background="@color/lavender">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Account"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:textColor="@color/lavender"/>
+        android:text="Hello Fragment C"
+        android:gravity="center"/>
 
 </FrameLayout>
