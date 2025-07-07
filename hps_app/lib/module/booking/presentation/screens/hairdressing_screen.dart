@@ -38,19 +38,29 @@ class HaidressingScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                children: kServices.map((service) {
-                  final isSelected = state.selectedServices.contains(service);
-                  return GestureDetector(
-                    onTap: () => state.toggleService(service),
-                    child: _buildServiceCard(service, isSelected),
-                  );
-                }).toList(),
-              ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                // Responsive: 2 cột cho màn nhỏ, 3 cột cho màn lớn
+                int crossAxisCount = constraints.maxWidth > 500 ? 2 : 3;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: GridView.count(
+                    crossAxisCount: crossAxisCount,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 1.1,
+                    children: kServices.map((service) {
+                      final isSelected = state.selectedServices.contains(service);
+                      return GestureDetector(
+                        onTap: () => state.toggleService(service),
+                        child: _buildServiceCard(service, isSelected),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
             ),
           ],
         );

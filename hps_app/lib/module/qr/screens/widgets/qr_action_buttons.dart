@@ -1,34 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:hps_app/module/menu/widgets/model%20.dart';
+import 'package:hps_app/module/menu/widgets/service.dart';
 import 'package:hps_app/module/success/screens/success_screen.dart';
 import 'package:hps_app/shared/constants/colors.dart';
+import 'package:intl/intl.dart';
 
 class QrActionButtons extends StatelessWidget {
-  const QrActionButtons({super.key});
+  final String? stylist;
+  final String? customerName;
+  final DateTime? paymentTime;
+  final String? service;
+  final String priceStr;
+  const QrActionButtons({
+    super.key,
+    this.stylist,
+    this.customerName,
+    this.paymentTime,
+    this.service,
+    required this.priceStr,
+  });
 
-  void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+  Future<void> _handlePayment(BuildContext context) async {
+    final model = ScheduleModel(
+      time: stylist != null && paymentTime != null
+          ? DateFormat('HH:mm').format(paymentTime!)
+          : DateFormat('HH:mm').format(DateTime.now()),
+      date: stylist != null && paymentTime != null
+          ? DateFormat('dd/MM/yyyy').format(paymentTime!)
+          : DateFormat('dd/MM/yyyy').format(DateTime.now()),
+      stylist: stylist ?? customerName ?? 'Khách',
+      service: service ?? 'Thanh toán QR',
+      price: priceStr,
+      type: 'history',
     );
-  }
-
-  Widget _buildButton({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return TextButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon, color: ColorsConstants.gray),
-      label: Text(
-        label,
-        style: const TextStyle(color: ColorsConstants.backgroundColor),
-      ),
-      style: TextButton.styleFrom(
-        foregroundColor: ColorsConstants.gray,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-      ),
-    );
+    await ScheduleService.addSchedule(model);
+    if (context.mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const SuccessScreen()),
+      );
+    }
   }
 
   @override
@@ -42,30 +53,17 @@ class QrActionButtons extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _buildButton(
-              context: context,
-              icon: Icons.payment,
-              label: 'Thanh toán',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SuccessScreen()),
-                );
-               
-              },
-            ),
-          ),
-          Container(
-            decoration: const BoxDecoration(color: ColorsConstants.gray),
-            height: 40,
-            width: 1,
-          ),
-          Expanded(
-            child: _buildButton(
-              context: context,
-              icon: Icons.file_download_outlined,
-              label: 'Tải mã QR',
-              onPressed: () => _showSnackBar(context, 'Đã tải mã QR'),
+            child: TextButton.icon(
+              onPressed: () => _handlePayment(context),
+              icon: const Icon(Icons.payment, color: ColorsConstants.gray),
+              label: const Text(
+                'Thanh toán',
+                style: TextStyle(color: ColorsConstants.backgroundColor),
+              ),
+              style: TextButton.styleFrom(
+                foregroundColor: ColorsConstants.gray,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+              ),
             ),
           ),
         ],

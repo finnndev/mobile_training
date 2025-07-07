@@ -16,7 +16,7 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  // Dummy data for stylist and service, replace with your real data source
+
   final List<String> stylists = ['Nghĩa Lê', 'Trần Mạnh', 'Stylist 3'];
   final List<String> services = ['Cắt tóc nam', 'Nhuộm tóc', 'Uốn tóc'];
   List<ScheduleModel> upcoming = [];
@@ -154,16 +154,15 @@ Future<void> _confirmCancel(int index) async {
                                     await showDialog(
                                       context: context,
                                       builder: (context) => EditScheduleDialog(
-                                        model: model,
-                                        stylists: stylists,
-                                        services: services,
-                                        onSave: (edited) async {
-                                          setState(() {
-                                            data[index] = edited;
-                                          });
-                                          await ScheduleService.updateAll([...upcoming, ...history]);
-                                        },
-                                      ),
+  model: model,
+  onSave: (edited) async {
+    setState(() {
+      data[index] = edited;
+    });
+    await ScheduleService.updateAll([...upcoming, ...history]);
+  },
+)
+
                                     );
                                   }),
                                 ]
@@ -189,7 +188,7 @@ Future<void> _confirmCancel(int index) async {
                                       builder: (context) => RebookDialog(
                                         model: model,
                                         onRebook: (date, time) async {
-                                          // Tạo lịch mới dựa trên lịch cũ nhưng cập nhật ngày và giờ
+                                         
                                           final newSchedule = ScheduleModel(
                                             time: time,
                                             date: date.toIso8601String().substring(0, 10),

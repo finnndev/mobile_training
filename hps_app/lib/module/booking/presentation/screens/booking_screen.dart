@@ -95,7 +95,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 final serviceStr = state.selectedServices.map((e) => e.label).join(', ');
                 final paymentMethod = state.selectedPaymentMethodLabel;
                 if (paymentMethod == 'salon') {
-                  // Lưu lịch sắp tới
+               
                   final schedule = ScheduleModel(
                     time: state.selectedTime,
                     date: dateStr,
@@ -112,7 +112,7 @@ class _BookingScreenState extends State<BookingScreen> {
                     ),
                   );
                 } else if (paymentMethod == 'ewallet' && state.selectedEWallet != null) {
-                  // Không lưu, chỉ chuyển sang QR, truyền đúng paymentTime là ngày giờ đã đặt
+                 
                   DateTime? paymentTime;
                   if (state.selectedDate != null && state.selectedTime != null) {
                     final timeParts = state.selectedTime!.split(':');

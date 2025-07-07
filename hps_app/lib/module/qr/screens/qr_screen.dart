@@ -4,9 +4,6 @@ import 'package:intl/intl.dart';
 import 'widgets/qr_header.dart';
 import 'widgets/payment_info.dart';
 import 'widgets/qr_action_buttons.dart';
-import 'package:hps_app/module/menu/widgets/model%20.dart';
-import 'package:hps_app/module/menu/widgets/service.dart';
-import 'package:hps_app/module/success/screens/success_screen.dart';
 
 class QrScreen extends StatelessWidget {
   final double? totalPrice;
@@ -57,43 +54,18 @@ class QrScreen extends StatelessWidget {
                     sizedBox16,
                     PaymentInfo(priceStr: priceStr, contentStr: contentStr),
                     sizedBox20,
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorsConstants.yellowPrimary,
-                        foregroundColor: Colors.black,
-                        minimumSize: const Size.fromHeight(48),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: () async {
-                        final model = ScheduleModel(
-                          time: stylist != null && paymentTime != null
-                              ? DateFormat('HH:mm').format(paymentTime!)
-                              : DateFormat('HH:mm').format(DateTime.now()),
-                          date: stylist != null && paymentTime != null
-                              ? DateFormat('dd/MM/yyyy').format(paymentTime!)
-                              : DateFormat('dd/MM/yyyy').format(DateTime.now()),
-                          stylist: stylist ?? customerName ?? 'Khách',
-                          service: service ?? 'Thanh toán QR',
-                          price: priceStr,
-                          type: 'history',
-                        );
-                        await ScheduleService.addSchedule(model);
-                        if (context.mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const SuccessScreen()),
-                          );
-                        }
-                      },
-                      child: const Text('Thanh toán', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                    sizedBox16,
-                    const QrActionButtons(),
-                    sizedBox16,
                   ],
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: QrActionButtons(
+                stylist: stylist,
+                customerName: customerName,
+                paymentTime: paymentTime,
+                service: service,
+                priceStr: priceStr,
               ),
             ),
           ],
